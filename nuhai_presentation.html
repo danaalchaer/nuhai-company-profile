@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NUHAI — Company Profile 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0C;--nav:#0E0E10;--card:#111115;--border:#1E1E24;
+  --teal:#5BDEE3;--white:#FAFAF8;--muted:#888884;
+  --glow:rgba(91,222,227,0.18);--glow2:rgba(91,222,227,0.06);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--white);
+  font-family:'Inter',-apple-system,sans-serif}
+/* ── CANVAS ─────────────────────────────────────────────────────── */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* ── LOGO ───────────────────────────────────────────────────────── */
+#logo{position:fixed;top:18px;left:28px;height:24px;width:auto;z-index:200;
+  filter:drop-shadow(0 0 6px rgba(91,222,227,0.4))}
+/* ── SLIDE WRAPPER ──────────────────────────────────────────────── */
+#slides-wrap{position:fixed;top:0;left:0;width:100%;height:100%;z-index:10}
+.slide{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:72px 64px 52px;overflow-y:auto;
+  opacity:0;transform:scale(0.93) translateY(18px);
+  transition:opacity .65s cubic-bezier(.4,0,.2,1),transform .65s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;scrollbar-width:none}
+.slide::-webkit-scrollbar{display:none}
+.slide.active{opacity:1;transform:scale(1) translateY(0);pointer-events:all}
+/* ── NAV ────────────────────────────────────────────────────────── */
+#nav-dots{
+  position:fixed;right:22px;top:50%;transform:translateY(-50%);
+  z-index:200;display:flex;flex-direction:column;gap:10px;align-items:center}
+.dot{
+  width:7px;height:7px;border-radius:50%;background:var(--muted);
+  cursor:pointer;transition:all .3s ease;opacity:.5}
+.dot.active{background:var(--teal);transform:scale(1.5);opacity:1;
+  box-shadow:0 0 8px var(--teal)}
+#slide-info{
+  position:fixed;bottom:22px;left:28px;z-index:200;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
+  letter-spacing:.08em}
+#slide-info span{color:var(--teal)}
+.nav-btn{
+  position:fixed;bottom:18px;z-index:200;
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  width:34px;height:34px;border-radius:50%;cursor:pointer;
+  font-size:14px;display:flex;align-items:center;justify-content:center;
+  transition:all .25s ease}
+.nav-btn:hover{border-color:var(--teal);color:var(--teal);
+  box-shadow:0 0 12px var(--glow)}
+#prev-btn{right:60px}#next-btn{right:20px}
+/* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
+.s-tag{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:.18em;color:var(--teal);text-transform:uppercase;margin-bottom:14px}
+.s-h1{font-size:clamp(28px,4vw,52px);font-weight:800;line-height:1.1;
+  color:var(--white);letter-spacing:-.02em;margin-bottom:8px;text-align:center}
+.s-h1 .tc{color:var(--teal)}
+.s-h2{font-size:clamp(20px,2.8vw,34px);font-weight:700;line-height:1.2;
+  color:var(--white);letter-spacing:-.015em;margin-bottom:6px;text-align:center}
+.s-h2 .tc{color:var(--teal)}
+.s-sub{font-size:13px;color:var(--muted);text-align:center;
+  line-height:1.6;max-width:640px;margin-bottom:28px}
+.s-body{font-size:13px;color:var(--white);line-height:1.75;
+  max-width:680px;text-align:center;margin-bottom:24px}
+.tc{color:var(--teal)}
+/* ── CARDS ──────────────────────────────────────────────────────── */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:22px 20px 18px;position:relative;overflow:hidden;
+  transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:var(--teal);border-radius:2px 2px 0 0}
+.card:hover{transform:translateY(-3px);border-color:var(--teal);
+  box-shadow:0 8px 32px var(--glow),0 0 0 1px rgba(91,222,227,.08)}
+.card-left{border-left:3px solid var(--teal);border-top:none}
+.card-left::before{display:none}
+.card-teal-border{border-color:rgba(91,222,227,.4);
+  box-shadow:0 0 20px var(--glow2),inset 0 0 20px var(--glow2)}
+/* 3D TILT */
+.card-3d{transition:transform .3s ease,box-shadow .3s ease;transform-style:preserve-3d;
+  transform:perspective(600px) rotateX(0) rotateY(0)}
+/* ── STAT CARDS ─────────────────────────────────────────────────── */
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:24px 20px 18px;text-align:center;position:relative;overflow:hidden;
+  transition:transform .3s ease,box-shadow .3s ease}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:var(--teal)}
+.stat-card:hover{transform:translateY(-4px);
+  box-shadow:0 12px 40px var(--glow),0 0 0 1px rgba(91,222,227,.1)}
+.stat-num{display:block;font-size:clamp(24px,3.5vw,42px);font-weight:800;
+  color:var(--teal);letter-spacing:-.02em;margin-bottom:6px;
+  text-shadow:0 0 24px rgba(91,222,227,.4)}
+.stat-lbl{display:block;font-size:11px;font-weight:600;color:var(--white);
+  letter-spacing:.04em;margin-bottom:4px}
+.stat-sub{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--muted)}
+/* ── GRID LAYOUTS ───────────────────────────────────────────────── */
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%}
+.grid-23{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+/* ── BADGE ──────────────────────────────────────────────────────── */
+.badge{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  letter-spacing:.1em;border-radius:4px;padding:3px 9px;margin-bottom:10px}
+.badge-live{background:rgba(91,222,227,.12);border:1px solid var(--teal);
+  color:var(--teal)}
+.badge-soon{background:rgba(136,136,132,.1);border:1px solid rgba(136,136,132,.3);
+  color:var(--muted)}
+/* ── PULL QUOTE ─────────────────────────────────────────────────── */
+.pull-quote{
+  border-left:3px solid var(--teal);padding:14px 20px;
+  background:rgba(91,222,227,.04);border-radius:0 8px 8px 0;
+  font-style:italic;font-size:13px;color:var(--teal);line-height:1.7;
+  margin:16px 0;max-width:700px;text-align:left}
+/* ── BULLET LIST ────────────────────────────────────────────────── */
+.bullet-list{list-style:none;text-align:left;width:100%;max-width:660px}
+.bullet-list li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:12.5px;color:var(--white);line-height:1.65;padding:5px 0;
+  border-bottom:1px solid rgba(30,30,36,.6)}
+.bullet-list li::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);
+  flex-shrink:0;margin-top:5px;box-shadow:0 0 6px var(--teal)}
+.bullet-list li strong{color:var(--teal)}
+/* ── ANIMATIONS ─────────────────────────────────────────────────── */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 20px var(--glow)}
+  50%{box-shadow:0 0 40px rgba(91,222,227,.35),0 0 80px rgba(91,222,227,.15)}}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.float-a{animation:float 4s ease-in-out infinite}
+.float-b{animation:float 4s ease-in-out infinite;animation-delay:.8s}
+.float-c{animation:float 4s ease-in-out infinite;animation-delay:1.6s}
+.float-d{animation:float 4s ease-in-out infinite;animation-delay:2.4s}
+.glow-btn{animation:glow-pulse 2.5s ease-in-out infinite}
+/* ── COVER STYLES ───────────────────────────────────────────────── */
+.cover-ring-wrap{
+  position:relative;width:360px;height:360px;margin:-20px auto 0;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cover-wordmark{
+  font-size:56px;font-weight:900;color:var(--white);letter-spacing:-.04em;
+  text-align:center;position:relative;z-index:2;
+  text-shadow:0 0 40px rgba(91,222,227,.3)}
+.cover-tagline{
+  font-size:13px;color:var(--muted);text-align:center;margin:12px 0 6px;
+  letter-spacing:.01em;max-width:500px}
+.cover-subtitle{
+  font-size:15px;font-weight:600;color:var(--white);text-align:center;
+  margin-bottom:18px}
+.cover-divider{
+  width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent);
+  margin:14px auto;box-shadow:0 0 12px var(--teal);opacity:.7}
+/* ── TOC ────────────────────────────────────────────────────────── */
+.toc-item{
+  display:flex;align-items:center;gap:16px;padding:12px 20px;border-radius:8px;
+  border:1px solid transparent;cursor:default;
+  transition:border-color .3s ease,background .3s ease}
+.toc-item:hover{background:rgba(91,222,227,.04);border-color:rgba(91,222,227,.15)}
+.toc-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);
+  width:24px;flex-shrink:0}
+.toc-title{font-size:13.5px;font-weight:600;color:var(--white);flex:1}
+.toc-pg{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+/* ── COMPARISON TABLE ────────────────────────────────────────────── */
+.comp-table{width:100%;border-collapse:separate;border-spacing:0;margin:16px 0;
+  border-radius:8px;overflow:hidden}
+.comp-table th,.comp-table td{padding:9px 14px;font-size:11.5px;border-bottom:1px solid var(--border)}
+.comp-table th{font-weight:700;font-size:10.5px;background:var(--nav);color:var(--muted)}
+.comp-table th.col-nuhai{background:rgba(91,222,227,.12);color:var(--teal)}
+.comp-table td.col-nuhai{color:var(--teal);font-weight:600;background:rgba(91,222,227,.04)}
+.comp-table td.row-label{color:var(--white);font-weight:600;background:rgba(17,17,21,.8)}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:rgba(30,30,36,.5)}
+.comp-table tr:hover td.col-nuhai{background:rgba(91,222,227,.06)}
+/* ── 8-BRAIN ORBITAL ─────────────────────────────────────────────── */
+.brains-orbital{position:relative;width:280px;height:280px;flex-shrink:0}
+.brains-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:70px;height:70px;border-radius:50%;background:var(--card);
+  border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:var(--teal);letter-spacing:.06em;
+  text-align:center;box-shadow:0 0 20px var(--glow),0 0 40px var(--glow2)}
+.brain-node{
+  position:absolute;width:62px;height:62px;border-radius:10px;
+  background:var(--card);border:1px solid rgba(91,222,227,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:8px;font-weight:600;color:var(--white);letter-spacing:.03em;text-align:center;
+  transition:all .3s ease}
+.brain-node:hover{border-color:var(--teal);color:var(--teal);
+  box-shadow:0 0 16px var(--glow);transform:scale(1.08)}
+/* ── PROCESS STEPS ───────────────────────────────────────────────── */
+.process-wrap{display:flex;gap:8px;align-items:stretch;width:100%;position:relative}
+.process-step{flex:1;background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:20px 14px;position:relative}
+.process-step::before{content:'';position:absolute;top:0;left:0;right:0;
+  height:2.5px;background:var(--teal);border-radius:2px 2px 0 0}
+.process-num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;
+  color:var(--teal);display:block;margin-bottom:6px;
+  text-shadow:0 0 16px rgba(91,222,227,.4)}
+.process-title{font-size:9.5px;font-weight:700;letter-spacing:.08em;
+  color:var(--white);margin-bottom:8px;display:block}
+.process-arrow{
+  display:flex;align-items:center;color:var(--teal);font-size:16px;flex-shrink:0;
+  animation:float2 3s ease-in-out infinite}
+/* ── INDUSTRIES ──────────────────────────────────────────────────── */
+.industry-tag{
+  background:var(--card);border:1px solid var(--border);border-left:3px solid var(--teal);
+  border-radius:6px;padding:10px 14px;transition:all .3s ease}
+.industry-tag:hover{border-color:var(--teal);background:rgba(91,222,227,.04);
+  box-shadow:0 4px 16px var(--glow2)}
+.industry-num{font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  color:var(--teal);display:block;margin-bottom:3px}
+.industry-name{font-size:12px;font-weight:600;color:var(--white)}
+/* ── CTA ─────────────────────────────────────────────────────────── */
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--teal);color:var(--bg);font-weight:700;font-size:14px;
+  padding:14px 36px;border-radius:10px;border:none;cursor:pointer;
+  letter-spacing:.02em;transition:all .3s ease;text-decoration:none}
+.cta-btn:hover{transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(91,222,227,.4),0 0 0 3px rgba(91,222,227,.15)}
+.pricing-block{text-align:center;margin:20px 0}
+.pricing-label{font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  color:var(--teal);letter-spacing:.14em;display:block;margin-bottom:8px}
+.pricing-amount{font-size:22px;font-weight:800;color:var(--white);
+  display:block;margin-bottom:6px}
+.pricing-note{font-size:12px;color:var(--muted)}
+.contact-card{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:24px 32px;width:100%;max-width:520px;position:relative;overflow:hidden}
+.contact-card::before{content:'';position:absolute;top:0;left:0;right:0;
+  height:2.5px;background:var(--teal)}
+.contact-row{display:flex;gap:16px;padding:8px 0;border-bottom:1px solid var(--border)}
+.contact-row:last-child{border-bottom:none}
+.contact-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--muted);width:100px;flex-shrink:0}
+.contact-val{font-size:12px;color:var(--white)}
+/* ── PERSPECTIVE GRID BG ──────────────────────────────────────────── */
+.persp-grid-bg{
+  position:absolute;inset:0;z-index:-1;
+  background:
+    linear-gradient(rgba(91,222,227,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(91,222,227,.04) 1px,transparent 1px);
+  background-size:48px 48px;
+  perspective:600px;transform:rotateX(30deg) scale(1.4);
+  transform-origin:center 60%;pointer-events:none;opacity:.7}
+/* ── SPACERS ─────────────────────────────────────────────────────── */
+.gap8{height:8px}.gap12{height:12px}.gap16{height:16px}
+.gap20{height:20px}.gap24{height:24px}.gap32{height:32px}
+/* ── RESPONSIVE ──────────────────────────────────────────────────── */
+@media(max-width:768px){
+  .slide{padding:72px 24px 50px}
+  .grid3,.grid4{grid-template-columns:repeat(2,1fr)}
+  .grid-23{grid-template-columns:repeat(2,1fr)}
+  .process-wrap{flex-direction:column}
+  .process-arrow{display:none}
+  .brains-orbital{width:220px;height:220px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<img id="logo" src="https://www.nuhai.net/images/nuhai-logo.png" alt="NUHAI"
+     onerror="this.style.display='none'">
+
+<div id="slides-wrap">
+
+<!-- ────────────────── SLIDE 1 · COVER ────────────────── -->
+<div class="slide active" id="s0">
+  <div class="s-tag">ORACLE · Business Growth Intelligence</div>
+  <div class="cover-ring-wrap" id="cover-ring-wrap">
+    <!-- Three.js torus renders on canvas behind this -->
+    <div class="cover-wordmark">NUHAI</div>
+  </div>
+  <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
+  <p class="cover-subtitle">AI Marketing System &amp; Business Growth Intelligence</p>
+  <div class="cover-divider"></div>
+  <div class="gap12"></div>
+  <div class="grid3" style="max-width:540px;margin:0 auto">
+    <div class="stat-card float-a">
+      <span class="stat-num">8</span>
+      <span class="stat-lbl">Dept. Brains</span>
+      <span class="stat-sub">35+ Agents</span>
+    </div>
+    <div class="stat-card float-b">
+      <span class="stat-num">89%</span>
+      <span class="stat-lbl">Prediction Accuracy</span>
+      <span class="stat-sub">Gulf Campaigns</span>
+    </div>
+    <div class="stat-card float-c">
+      <span class="stat-num">9</span>
+      <span class="stat-lbl">Cultural Profiles</span>
+      <span class="stat-sub">Gulf-Calibrated</span>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 2 · TOC ──────────────────── -->
+<div class="slide" id="s1">
+  <div class="persp-grid-bg"></div>
+  <div class="s-tag">CONTENTS</div>
+  <div class="s-h1">Company Profile <span class="tc">2026</span></div>
+  <div class="gap24"></div>
+  <div style="width:100%;max-width:560px">
+    <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-pg">p.03</span></div>
+    <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">About NUHAI</span><span class="toc-pg">p.04</span></div>
+    <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">The ORACLE AI System</span><span class="toc-pg">p.05</span></div>
+    <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">Products &amp; Services</span><span class="toc-pg">p.06</span></div>
+    <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">Our Process</span><span class="toc-pg">p.07</span></div>
+    <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">Core Values</span><span class="toc-pg">p.08</span></div>
+    <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">Why NUHAI</span><span class="toc-pg">p.09</span></div>
+    <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">NUHAI in Numbers</span><span class="toc-pg">p.10</span></div>
+    <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">Industries We Serve</span><span class="toc-pg">p.11</span></div>
+    <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">Get in Touch</span><span class="toc-pg">p.12</span></div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 3 · EXEC SUMMARY ─────────── -->
+<div class="slide" id="s2">
+  <div class="s-tag">01 · EXECUTIVE SUMMARY</div>
+  <div class="s-h1">Business Growth Intelligence.<br><span class="tc">Powered by AI.</span></div>
+  <div class="gap16"></div>
+  <p class="s-body">NUHAI is an AI-powered business growth intelligence system headquartered in Dubai, UAE. Purpose-built for the Gulf market, combining autonomous AI technology with deep cultural intelligence to deliver measurable, guaranteed revenue outcomes. At the core is ORACLE: 35 specialized AI agents working in parallel across 8 department brains.</p>
+  <div class="grid4" style="max-width:720px;margin:0 auto">
+    <div class="stat-card float-a">
+      <span class="stat-num">8</span>
+      <span class="stat-lbl">Department Brains</span>
+      <span class="stat-sub">35+ Agents</span>
+    </div>
+    <div class="stat-card float-b">
+      <span class="stat-num">89%</span>
+      <span class="stat-lbl">Prediction Accuracy</span>
+      <span class="stat-sub">Gulf Campaigns</span>
+    </div>
+    <div class="stat-card float-c">
+      <span class="stat-num">24/7</span>
+      <span class="stat-lbl">Autonomous Operation</span>
+      <span class="stat-sub">No bottlenecks</span>
+    </div>
+    <div class="stat-card float-d">
+      <span class="stat-num">9</span>
+      <span class="stat-lbl">Cultural Profiles</span>
+      <span class="stat-sub">Gulf-Calibrated</span>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 4 · ABOUT ────────────────── -->
+<div class="slide" id="s3" style="align-items:stretch">
+  <div style="text-align:center"><div class="s-tag">02 · ABOUT NUHAI</div></div>
+  <div class="s-h2">The Intelligence Layer for <span class="tc">Gulf Business Growth</span></div>
+  <div class="gap20"></div>
+  <div class="grid3">
+    <div class="card card-3d">
+      <div class="s-tag" style="margin-bottom:8px">Our Origin</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Born at the intersection of Gulf culture, global ambition, and powerful AI. Built in Dubai because the team understands multicultural markets and the speed at which business moves in the region.</p>
+    </div>
+    <div class="card card-3d">
+      <div class="s-tag" style="margin-bottom:8px">Gulf-First Intelligence</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Business in the Gulf runs on relationships, timing, and trust. NUHAI was built to understand the markets it serves: Arabic fluency, cultural intelligence, and regional market understanding from day one.</p>
+    </div>
+    <div class="card card-3d">
+      <div class="s-tag" style="margin-bottom:8px">What Makes Us Different</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Not a Marketing Agency. Not a Software Tool. Not a Consultant. A Growth Intelligence System: AI that reads, predicts, and executes with guaranteed outcomes.</p>
+    </div>
+  </div>
+  <div class="gap16"></div>
+  <div class="pull-quote">"NUHAI is not simple automation. It is an autonomous AI marketing brain that grows, compounding intelligence with every client, every campaign, and every data point."</div>
+  <div class="gap16"></div>
+  <div class="grid4" style="max-width:640px;margin:0 auto">
+    <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">AI-Native</span></div>
+    <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">Gulf-First</span></div>
+    <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">Intelligence-Driven</span></div>
+    <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">Growth-Obsessed</span></div>
+  </div>
+  <div class="gap12"></div>
+  <p style="font-size:11px;color:var(--muted);text-align:center">English &nbsp;·&nbsp; عربي</p>
+</div>
+
+<!-- ────────────────── SLIDE 5 · ORACLE ───────────────── -->
+<div class="slide" id="s4" style="justify-content:flex-start">
+  <div class="gap8"></div>
+  <div class="s-tag">03 · THE ORACLE AI SYSTEM</div>
+  <div class="s-h2">Meet <span class="tc">ORACLE</span></div>
+  <div class="s-tag tc" style="font-size:12px;letter-spacing:.04em;color:var(--teal);margin-bottom:6px">8-Brain Autonomous Architecture</div>
+  <p class="s-sub" style="margin-bottom:16px">ORACLE runs 8 independent department brains: Creative, Intelligence, Media, Learning, Performance, Strategy, Growth, and Client. Each manages its own agents autonomously — every function runs in parallel without bottlenecks.</p>
+
+  <div class="grid3" style="margin-bottom:16px">
+    <div class="card card-left"><strong class="tc" style="font-size:13px;display:block;margin-bottom:6px">Reads</strong><p style="font-size:11.5px;color:var(--muted);line-height:1.65">Ingests market signals, competitor moves, audience behaviour, and regional trends in real-time.</p></div>
+    <div class="card card-left"><strong class="tc" style="font-size:13px;display:block;margin-bottom:6px">Predicts</strong><p style="font-size:11.5px;color:var(--muted);line-height:1.65">Forecasts campaign outcomes, conversion rates, and growth trajectories at 89% accuracy.</p></div>
+    <div class="card card-left"><strong class="tc" style="font-size:13px;display:block;margin-bottom:6px">Executes</strong><p style="font-size:11.5px;color:var(--muted);line-height:1.65">Deploys full marketing strategies: content, ads, SEO, automation, without human bottlenecks.</p></div>
+  </div>
+
+  <!-- 8 Brains orbital + bullets side by side -->
+  <div style="display:flex;gap:32px;align-items:center;width:100%;justify-content:center;flex-wrap:wrap">
+    <div class="brains-orbital" id="brains-orbital">
+      <div class="brains-center">ORACLE<br>8 BRAINS</div>
+      <!-- nodes positioned by JS -->
+    </div>
+    <div style="flex:1;min-width:260px;max-width:360px">
+      <p style="font-size:11px;font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:.04em">KEY CAPABILITIES</p>
+      <ul class="bullet-list" style="font-size:11.5px">
+        <li><div><strong>Compounding Intelligence</strong> — Every client interaction makes the system smarter</div></li>
+        <li><div><strong>Cultural Intelligence</strong> — Built-in understanding of Gulf cultural rhythms</div></li>
+        <li><div><strong>Revenue Prediction</strong> — Documented predictions with confidence scores</div></li>
+        <li><div><strong>WhatsApp Native</strong> — Dedicated agents for the Gulf's primary channel</div></li>
+        <li><div><strong>Self-Learning</strong> — 4-level autonomy system, compounding over time</div></li>
+        <li><div><strong>Competitor Data Walls</strong> — Each client's intelligence is fully isolated</div></li>
+        <li><div><strong>Real-Time Optimization</strong> — Underperformers cut, winners scaled instantly</div></li>
+        <li><div><strong>Competitor Mapping</strong> — Live tracking of moves across the Gulf</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 6 · PRODUCTS ─────────────── -->
+<div class="slide" id="s5">
+  <div class="s-tag">04 · PRODUCTS &amp; SERVICES</div>
+  <div class="s-h1">Intelligence <span class="tc">Suite</span></div>
+  <div class="gap24"></div>
+  <div class="grid3" style="max-width:820px;margin:0 auto">
+    <div class="card card-teal-border card-3d">
+      <span class="badge badge-live">LIVE</span>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">NUHAI Studio</div>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.7">AI-powered marketing automation. Autonomous campaign creation, cultural intelligence, real-time optimization, competitor mapping, and revenue prediction with confidence scores. WhatsApp sequence building and broadcasting (Gulf-native channel). 9-profile cultural calibration per campaign. 4-level agent autonomy system.</p>
+    </div>
+    <div class="card card-3d">
+      <span class="badge badge-soon">COMING SOON</span>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">NUHAI Intelligence</div>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.7">Real-time Gulf market prediction engine. Market predictions, competitor tracking, trend detection, and demand forecasting.</p>
+    </div>
+    <div class="card card-3d">
+      <span class="badge badge-soon">COMING SOON</span>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">NUHAI Labs</div>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.7">Experimental AI automation tools. Custom AI workflows, intelligent data pipelines, and integration APIs.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 7 · PROCESS ─────────────── -->
+<div class="slide" id="s6">
+  <div class="s-tag">05 · OUR PROCESS</div>
+  <div class="s-h1">How We <span class="tc">Work</span></div>
+  <p class="s-sub">Every engagement follows a structured, data-driven process designed to deliver measurable outcomes from day one.</p>
+  <div class="process-wrap">
+    <div class="process-step">
+      <span class="process-num">01</span>
+      <span class="process-title">CONNECT YOUR DATA</span>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.65">Link business data, analytics, and marketing channels. ORACLE ingests everything in minutes.</p>
+    </div>
+    <div class="process-arrow">→</div>
+    <div class="process-step">
+      <span class="process-num">02</span>
+      <span class="process-title">ORACLE ANALYZES</span>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.65">8 department brains activate simultaneously: Creative, Intelligence, Media, Learning, Performance, Strategy, Growth, and Client — each managing its own agents.</p>
+    </div>
+    <div class="process-arrow">→</div>
+    <div class="process-step">
+      <span class="process-num">03</span>
+      <span class="process-title">CAMPAIGNS DEPLOY</span>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.65">AI creates, tests, and optimizes campaigns in real time. Underperformers cut immediately, winners scaled aggressively.</p>
+    </div>
+    <div class="process-arrow">→</div>
+    <div class="process-step">
+      <span class="process-num">04</span>
+      <span class="process-title">REVENUE TRACKED</span>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.65">Every engagement starts with a documented revenue prediction. Clear targets and measurable outcomes — full transparency.</p>
+    </div>
+  </div>
+  <div class="gap20"></div>
+  <div class="pull-quote">"Every campaign begins with a documented revenue prediction backed by data. Every outcome is tracked, measured, and reported with complete transparency."</div>
+</div>
+
+<!-- ────────────────── SLIDE 8 · VALUES ──────────────── -->
+<div class="slide" id="s7">
+  <div class="s-tag">06 · CORE VALUES</div>
+  <div class="s-h1">What We <span class="tc">Stand For</span></div>
+  <div class="gap24"></div>
+  <div class="grid2" style="max-width:720px;margin:0 auto">
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">S</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Speed</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Act on intelligence before the market shifts. Every second of delay is a missed opportunity.</p>
+    </div>
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">P</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Precision</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Documented predictions with confidence scores. No vague promises. Every outcome accountable.</p>
+    </div>
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">T</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Trust</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Performance-fee model available. Full transparency at every step — every prediction, campaign decision, and outcome documented and accountable.</p>
+    </div>
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">G</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Gulf Multicultural Strength</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">9 distinct cultural profiles: Emirati, Saudi, South Asian, Levantine, African, Filipino, Chinese, Russian, British/European. Every campaign calibrated to nationality, not a generic Gulf approach.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 9 · WHY NUHAI ───────────── -->
+<div class="slide" id="s8" style="justify-content:flex-start">
+  <div class="gap8"></div>
+  <div class="s-tag">07 · WHY NUHAI</div>
+  <div class="s-h2">A New Category of <span class="tc">Growth</span></div>
+  <div class="gap16"></div>
+  <div style="width:100%;overflow-x:auto">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="width:100px"></th>
+          <th>Traditional Agency</th>
+          <th>Marketing Software</th>
+          <th class="col-nuhai">NUHAI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="row-label">Approach</td><td style="color:var(--muted);font-size:11px">Manual strategy</td><td style="color:var(--muted);font-size:11px">Template-based</td><td class="col-nuhai">AI-autonomous</td></tr>
+        <tr><td class="row-label">Speed</td><td style="color:var(--muted);font-size:11px">Weeks to launch</td><td style="color:var(--muted);font-size:11px">DIY, slow</td><td class="col-nuhai">Minutes to deploy</td></tr>
+        <tr><td class="row-label">Intelligence</td><td style="color:var(--muted);font-size:11px">Human-limited</td><td style="color:var(--muted);font-size:11px">Rule-based</td><td class="col-nuhai">8 brains, 35+ agents</td></tr>
+        <tr><td class="row-label">Cultural Fit</td><td style="color:var(--muted);font-size:11px">Generic</td><td style="color:var(--muted);font-size:11px">None</td><td class="col-nuhai">9 cultural profiles</td></tr>
+        <tr><td class="row-label">Accountability</td><td style="color:var(--muted);font-size:11px">Low</td><td style="color:var(--muted);font-size:11px">None</td><td class="col-nuhai">Guaranteed outcomes</td></tr>
+        <tr><td class="row-label">Optimization</td><td style="color:var(--muted);font-size:11px">Monthly reviews</td><td style="color:var(--muted);font-size:11px">Manual A/B</td><td class="col-nuhai">Real-time, always-on</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="gap16"></div>
+  <p style="font-size:11px;font-weight:700;color:var(--white);text-align:center;letter-spacing:.04em;margin-bottom:12px">THE NUHAI ADVANTAGE: WHAT NO OTHER SYSTEM OFFERS</p>
+  <div class="grid3" style="max-width:720px;margin:0 auto">
+    <div class="card"><div class="s-tag" style="margin-bottom:6px">8-Brain Architecture</div><p style="font-size:11px;color:var(--muted)">The only Gulf AI system with independent department brains running in parallel</p></div>
+    <div class="card"><div class="s-tag" style="margin-bottom:6px">9 Cultural Profiles</div><p style="font-size:11px;color:var(--muted)">Campaigns calibrated per nationality, not generic Gulf targeting</p></div>
+    <div class="card"><div class="s-tag" style="margin-bottom:6px">WhatsApp Native</div><p style="font-size:11px;color:var(--muted)">Dedicated WhatsApp agents built for the Gulf's dominant communication channel</p></div>
+    <div class="card"><div class="s-tag" style="margin-bottom:6px">Competitor Data Walls</div><p style="font-size:11px;color:var(--muted)">Your intelligence is yours alone, fully isolated from competing clients</p></div>
+    <div class="card"><div class="s-tag" style="margin-bottom:6px">Compounding Intelligence</div><p style="font-size:11px;color:var(--muted)">4-level autonomy system that gets smarter the longer you stay</p></div>
+    <div class="card"><div class="s-tag" style="margin-bottom:6px">Performance-Fee Model</div><p style="font-size:11px;color:var(--muted)">Aligned incentives. Our success is tied directly to your growth</p></div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 10 · NUMBERS ─────────────── -->
+<div class="slide" id="s9">
+  <div class="s-tag">08 · BY THE NUMBERS</div>
+  <div class="s-h1">NUHAI in <span class="tc">Numbers</span></div>
+  <div class="gap28"></div>
+  <div class="grid-23" style="max-width:760px;margin:0 auto">
+    <div class="stat-card float-a"><span class="stat-num" style="font-size:52px">8</span><span class="stat-lbl">Department Brains</span><span class="stat-sub">Running in parallel autonomously</span></div>
+    <div class="stat-card float-b"><span class="stat-num" style="font-size:52px">35+</span><span class="stat-lbl">Specialized AI Agents</span><span class="stat-sub">Across all departments</span></div>
+    <div class="stat-card float-c"><span class="stat-num" style="font-size:52px">9</span><span class="stat-lbl">Cultural Profiles</span><span class="stat-sub">Calibrated per campaign</span></div>
+    <div class="stat-card float-d"><span class="stat-num" style="font-size:52px">89%</span><span class="stat-lbl">Prediction Accuracy</span><span class="stat-sub">On Gulf campaigns</span></div>
+    <div class="stat-card" style="animation:float 4s ease-in-out infinite;animation-delay:.5s"><span class="stat-num" style="font-size:52px">18</span><span class="stat-lbl">Industry Verticals</span><span class="stat-sub">Served across the GCC</span></div>
+    <div class="stat-card" style="animation:float 4s ease-in-out infinite;animation-delay:1.2s"><span class="stat-num" style="font-size:52px">24/7</span><span class="stat-lbl">Autonomous Operation</span><span class="stat-sub">Without human bottlenecks</span></div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 11 · INDUSTRIES ──────────── -->
+<div class="slide" id="s10">
+  <div class="s-tag">09 · INDUSTRIES WE SERVE</div>
+  <div class="s-h1">Industries We <span class="tc">Serve</span></div>
+  <div class="gap20"></div>
+  <div class="grid-23" style="max-width:800px;margin:0 auto">
+    <div class="industry-tag"><span class="industry-num">01</span><span class="industry-name">F&amp;B</span></div>
+    <div class="industry-tag"><span class="industry-num">02</span><span class="industry-name">Luxury &amp; Fashion</span></div>
+    <div class="industry-tag"><span class="industry-num">03</span><span class="industry-name">E-Commerce</span></div>
+    <div class="industry-tag"><span class="industry-num">04</span><span class="industry-name">Automotive</span></div>
+    <div class="industry-tag"><span class="industry-num">05</span><span class="industry-name">Healthcare</span></div>
+    <div class="industry-tag"><span class="industry-num">06</span><span class="industry-name">Beauty &amp; Wellness</span></div>
+    <div class="industry-tag"><span class="industry-num">07</span><span class="industry-name">Hospitality</span></div>
+    <div class="industry-tag"><span class="industry-num">08</span><span class="industry-name">Finance &amp; Banking</span></div>
+    <div class="industry-tag"><span class="industry-num">09</span><span class="industry-name">Entertainment</span></div>
+    <div class="industry-tag"><span class="industry-num">10</span><span class="industry-name">Construction &amp; Real Estate</span></div>
+    <div class="industry-tag"><span class="industry-num">11</span><span class="industry-name">Technology &amp; SaaS</span></div>
+    <div class="industry-tag"><span class="industry-num">12</span><span class="industry-name">Education</span></div>
+    <div class="industry-tag"><span class="industry-num">13</span><span class="industry-name">Professional Services</span></div>
+    <div class="industry-tag"><span class="industry-num">14</span><span class="industry-name">Government &amp; Semi-Gov</span></div>
+    <div class="industry-tag"><span class="industry-num">15</span><span class="industry-name">Retail</span></div>
+    <div class="industry-tag"><span class="industry-num">16</span><span class="industry-name">Media &amp; Publishing</span></div>
+    <div class="industry-tag"><span class="industry-num">17</span><span class="industry-name">Sports &amp; Fitness</span></div>
+    <div class="industry-tag"><span class="industry-num">18</span><span class="industry-name">Legal &amp; Compliance</span></div>
+  </div>
+</div>
+
+<!-- ────────────────── SLIDE 12 · GET IN TOUCH ────────── -->
+<div class="slide" id="s11">
+  <div class="s-tag" style="font-family:'JetBrains Mono',monospace;letter-spacing:.2em">BEGIN YOUR INTELLIGENCE JOURNEY</div>
+  <div class="gap12"></div>
+  <div class="s-h1" style="font-size:clamp(26px,4vw,52px)">Ready to outgrow<br><span class="tc">the competition?</span></div>
+  <div class="gap12"></div>
+  <p class="s-sub">"We don't just plan your growth. We engineer it."</p>
+  <div class="pricing-block">
+    <span class="pricing-label">INVESTMENT</span>
+    <span class="pricing-amount">Starting from AED 8,000 / month</span>
+    <span class="pricing-note">Performance-fee model available. Our growth is tied to yours.</span>
+  </div>
+  <div class="gap16"></div>
+  <a href="mailto:info@nuhai.net" class="cta-btn glow-btn">
+    Get Started &nbsp;&rarr;
+  </a>
+  <div class="gap24"></div>
+  <div class="contact-card">
+    <div class="contact-row"><span class="contact-lbl">Website</span><span class="contact-val">www.nuhai.net</span></div>
+    <div class="contact-row"><span class="contact-lbl">Email</span><span class="contact-val">info@nuhai.net</span></div>
+    <div class="contact-row"><span class="contact-lbl">Headquarters</span><span class="contact-val">Dubai, United Arab Emirates</span></div>
+    <div class="contact-row"><span class="contact-lbl">Products</span><span class="contact-val">Studio (Live) &nbsp;|&nbsp; Intelligence (Coming Soon) &nbsp;|&nbsp; Labs (Coming Soon)</span></div>
+  </div>
+  <div class="gap20"></div>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-align:center">NUHAI © 2026. All rights reserved. Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
+</div>
+
+</div><!-- /slides-wrap -->
+
+<!-- ── NAVIGATION ──────────────────────────────────────── -->
+<div id="nav-dots"></div>
+<div id="slide-info"><span id="si-num">01</span> / 12 &nbsp;&nbsp; <span id="si-title"></span></div>
+<button class="nav-btn" id="prev-btn">&#8592;</button>
+<button class="nav-btn" id="next-btn">&#8594;</button>
+
+<script>
+// ─── Three.js Setup ───────────────────────────────────────────────
+const canvas = document.getElementById('bg-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+camera.position.z = 500;
+
+// ── Particles ────────────────────────────────────────────────────
+const PARTICLE_COUNT = 180;
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(PARTICLE_COUNT * 3);
+const pVel = new Float32Array(PARTICLE_COUNT * 3);
+
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  const W2 = window.innerWidth / 2, H2 = window.innerHeight / 2;
+  pPos[i*3]   = (Math.random() - .5) * W2 * 2.2;
+  pPos[i*3+1] = (Math.random() - .5) * H2 * 2.2;
+  pPos[i*3+2] = (Math.random() - .5) * 300;
+  pVel[i*3]   = (Math.random() - .5) * 0.12;
+  pVel[i*3+1] = (Math.random() - .5) * 0.10;
+  pVel[i*3+2] = 0;
+}
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const pMat = new THREE.PointsMaterial({ color: 0x5BDEE3, size: 1.8, transparent: true, opacity: .22 });
+const particles = new THREE.Points(pGeo, pMat);
+scene.add(particles);
+
+// ── Cover Torus ───────────────────────────────────────────────────
+const torusGeo = new THREE.TorusGeometry(130, 4.5, 16, 120);
+const torusMat = new THREE.MeshBasicMaterial({
+  color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .45 });
+const torus = new THREE.Mesh(torusGeo, torusMat);
+torus.visible = true;
+scene.add(torus);
+
+// Outer glow ring (larger, more transparent)
+const torusGlow = new THREE.Mesh(
+  new THREE.TorusGeometry(148, 1.5, 8, 100),
+  new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .12 })
+);
+torusGlow.visible = true;
+scene.add(torusGlow);
+
+// ── ORACLE Sphere ─────────────────────────────────────────────────
+const sphGeo = new THREE.SphereGeometry(90, 28, 28);
+const sphMat = new THREE.MeshBasicMaterial({
+  color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .28 });
+const sphere = new THREE.Mesh(sphGeo, sphMat);
+sphere.position.set(0, 120, 0);
+sphere.visible = false;
+scene.add(sphere);
+
+// ── Animate ───────────────────────────────────────────────────────
+let clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // Particles drift
+  const pa = pGeo.attributes.position.array;
+  const W2 = window.innerWidth / 2, H2 = window.innerHeight / 2;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    pa[i*3]   += pVel[i*3];
+    pa[i*3+1] += pVel[i*3+1];
+    if (pa[i*3] >  W2*1.1) pa[i*3] = -W2*1.1;
+    if (pa[i*3] < -W2*1.1) pa[i*3] =  W2*1.1;
+    if (pa[i*3+1] >  H2*1.1) pa[i*3+1] = -H2*1.1;
+    if (pa[i*3+1] < -H2*1.1) pa[i*3+1] =  H2*1.1;
+  }
+  pGeo.attributes.position.needsUpdate = true;
+
+  // Torus rotation
+  if (torus.visible) {
+    torus.rotation.x = t * 0.18;
+    torus.rotation.y = t * 0.28;
+    torus.rotation.z = t * 0.06;
+    torusGlow.rotation.x = t * 0.12;
+    torusGlow.rotation.y = -t * 0.22;
+  }
+
+  // Sphere rotation
+  if (sphere.visible) {
+    sphere.rotation.x = t * 0.14;
+    sphere.rotation.y = t * 0.2;
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+
+// ─── Slide System ─────────────────────────────────────────────────
+const SLIDES_DATA = [
+  ['01', 'Cover'],
+  ['02', 'Table of Contents'],
+  ['03', 'Executive Summary'],
+  ['04', 'About NUHAI'],
+  ['05', 'The ORACLE AI System'],
+  ['06', 'Products & Services'],
+  ['07', 'Our Process'],
+  ['08', 'Core Values'],
+  ['09', 'Why NUHAI'],
+  ['10', 'NUHAI in Numbers'],
+  ['11', 'Industries We Serve'],
+  ['12', 'Get in Touch'],
+];
+const slides = Array.from(document.querySelectorAll('.slide'));
+let cur = 0;
+
+// Build nav dots
+const dotsEl = document.getElementById('nav-dots');
+SLIDES_DATA.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', () => goTo(i));
+  dotsEl.appendChild(d);
+});
+
+function updateUI() {
+  // Dots
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === cur);
+  });
+  // Info
+  document.getElementById('si-num').textContent = SLIDES_DATA[cur][0];
+  document.getElementById('si-title').textContent = SLIDES_DATA[cur][1];
+  // 3D objects
+  const onCover  = cur === 0;
+  const onOracle = cur === 4;
+  torus.visible     = onCover;
+  torusGlow.visible = onCover;
+  sphere.visible    = onOracle;
+  // Particle opacity
+  pMat.opacity = onCover ? .22 : (cur === 11 ? .32 : .14);
+}
+
+function goTo(n) {
+  if (n < 0 || n >= slides.length) return;
+  slides[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  // Reset scroll position
+  slides[cur].scrollTop = 0;
+  updateUI();
+}
+
+document.getElementById('prev-btn').addEventListener('click', () => goTo(cur - 1));
+document.getElementById('next-btn').addEventListener('click', () => goTo(cur + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
+});
+
+// Touch / swipe
+let tX = 0;
+document.addEventListener('touchstart', e => { tX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend',   e => {
+  const dx = tX - e.changedTouches[0].clientX;
+  if (Math.abs(dx) > 50) goTo(cur + (dx > 0 ? 1 : -1));
+}, { passive: true });
+
+// ── Card 3D tilt ──────────────────────────────────────────────────
+document.querySelectorAll('.card-3d').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const xc = (e.clientX - r.left) / r.width  - .5;
+    const yc = (e.clientY - r.top)  / r.height - .5;
+    card.style.transform = `perspective(600px) rotateY(${xc*10}deg) rotateX(${-yc*8}deg) translateY(-3px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(600px) rotateX(0) rotateY(0)';
+  });
+});
+
+// ── 8-Brain Orbital ───────────────────────────────────────────────
+const brainNames = ['Creative','Intelligence','Media','Learning',
+                    'Performance','Strategy','Growth','Client'];
+const orbital = document.getElementById('brains-orbital');
+const R_ORBIT = 104, CX = 140, CY = 140, NODE_SIZE = 62;
+
+brainNames.forEach((name, i) => {
+  const angle = (i / brainNames.length) * Math.PI * 2 - Math.PI / 2;
+  const x = CX + R_ORBIT * Math.cos(angle) - NODE_SIZE / 2;
+  const y = CY + R_ORBIT * Math.sin(angle) - NODE_SIZE / 2;
+  const node = document.createElement('div');
+  node.className = 'brain-node';
+  node.style.left = x + 'px';
+  node.style.top  = y + 'px';
+  node.style.animationDelay = (i * 0.2) + 's';
+  node.textContent = name;
+  orbital.appendChild(node);
+});
+
+// Draw orbital ring on an SVG overlay
+const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+svg.style.cssText = 'position:absolute;top:0;left:0;width:280px;height:280px;pointer-events:none';
+svg.setAttribute('viewBox','0 0 280 280');
+const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+circle.setAttribute('cx','140');circle.setAttribute('cy','140');
+circle.setAttribute('r','104');circle.setAttribute('fill','none');
+circle.setAttribute('stroke','rgba(91,222,227,0.18)');circle.setAttribute('stroke-width','1');
+circle.setAttribute('stroke-dasharray','4 6');
+svg.appendChild(circle);
+orbital.appendChild(svg);
+
+// ── Resize ────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Init
+updateUI();
+</script>
+</body>
+</html>
