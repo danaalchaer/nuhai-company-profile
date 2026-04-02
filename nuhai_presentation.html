@@ -244,9 +244,15 @@ body{
 .comp-table tr:hover td{background:rgba(30,30,36,.5)}
 .comp-table tr:hover td.col-nuhai{background:rgba(91,222,227,.06)}
 /* ── 8-BRAIN ORBITAL ────────────────────────────────────────────── */
-.brains-orbital{position:relative;width:280px;height:280px;flex-shrink:0}
+.brains-orbital{
+  position:relative;width:280px;height:280px;flex-shrink:0;
+  display:block;margin:0 auto}
+.brains-orbital-wrap{
+  display:flex;justify-content:center;align-items:center;width:100%}
 .brains-center{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
   width:70px;height:70px;border-radius:50%;background:var(--card);
   border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;
   font-size:9px;font-weight:700;color:var(--teal);letter-spacing:.06em;
@@ -333,8 +339,31 @@ body{
   /* Slide 1 — center 3rd stat card */
   #s0 .grid3{grid-template-columns:repeat(2,1fr)}
   #s0 .grid3 .stat-card:last-child{grid-column:1/-1;max-width:220px;margin:0 auto}
-  /* Slide 4 — brains orbital */
-  #s4 .brains-orbital{transform:scale(0.72);transform-origin:top center;margin:0 auto;display:block}
+  /* Slide 5 — brains orbital: scale down and center */
+  #s4 .brains-orbital{
+    transform:scale(0.72);
+    transform-origin:center center;
+    margin:0 auto;
+    display:block;
+  }
+  #s4 .brains-orbital-wrap{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    /* compensate for scale reduction so it doesn't collapse surrounding space */
+    height:calc(280px * 0.72);
+  }
+  /* Stack orbital above capabilities list on mobile */
+  #s4 .oracle-flex{
+    flex-direction:column;
+    align-items:center;
+  }
+  #s4 .oracle-caps{
+    min-width:unset;
+    max-width:100%;
+    width:100%;
+  }
   /* Pull quote */
   .pull-quote-center{font-size:15px;padding:24px 20px}
   /* Nav */
@@ -347,7 +376,10 @@ body{
 }
 @media(max-width:480px){
   .cover-wordmark{font-size:44px;letter-spacing:2px}
-  .brains-orbital{width:240px;height:240px}
+  /* Do NOT resize .brains-orbital here — node positions are JS-computed for 280px.
+     Instead, scale further down so nothing clips on very small screens. */
+  #s4 .brains-orbital{transform:scale(0.62);transform-origin:center center}
+  #s4 .brains-orbital-wrap{height:calc(280px * 0.62)}
 }
 </style>
 </head>
@@ -493,11 +525,13 @@ body{
   <div class="gap40"></div>
 
   <!-- 8 Brains orbital + capabilities -->
-  <div style="display:flex;gap:40px;align-items:flex-start;width:100%;max-width:900px;justify-content:center;flex-wrap:wrap">
-    <div class="brains-orbital" id="brains-orbital">
-      <div class="brains-center">ORACLE<br>8 BRAINS</div>
+  <div class="oracle-flex" style="display:flex;gap:40px;align-items:center;width:100%;max-width:900px;justify-content:center;flex-wrap:wrap">
+    <div class="brains-orbital-wrap">
+      <div class="brains-orbital" id="brains-orbital">
+        <div class="brains-center">ORACLE<br>8 BRAINS</div>
+      </div>
     </div>
-    <div style="flex:1;min-width:260px;max-width:380px">
+    <div class="oracle-caps" style="flex:1;min-width:260px;max-width:380px">
       <p style="font-size:11px;font-weight:700;color:var(--white);margin-bottom:12px;letter-spacing:.04em">KEY CAPABILITIES</p>
       <ul class="bullet-list" style="font-size:11.5px">
         <li><div><strong>Compounding Intelligence</strong><span class="tc"> · </span>Every client interaction makes the system smarter</div></li>
