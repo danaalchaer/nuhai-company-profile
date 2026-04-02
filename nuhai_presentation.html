@@ -13,25 +13,39 @@
   --teal:#5BDEE3;--white:#FAFAF8;--muted:#888884;
   --glow:rgba(91,222,227,0.18);--glow2:rgba(91,222,227,0.06);
 }
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--white);
-  font-family:'Inter',-apple-system,sans-serif}
+html{
+  scroll-behavior:smooth;
+  overflow-y:scroll;
+  height:auto;
+  background:var(--bg);
+}
+body{
+  width:100%;height:auto;overflow-x:hidden;
+  background:var(--bg);color:var(--white);
+  font-family:'Inter',-apple-system,sans-serif;
+}
 /* ── CANVAS ─────────────────────────────────────────────────────── */
 #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 /* ── LOGO ───────────────────────────────────────────────────────── */
 #logo{position:fixed;top:18px;left:28px;height:24px;width:auto;z-index:200;
   filter:drop-shadow(0 0 6px rgba(91,222,227,0.4))}
 /* ── SLIDE WRAPPER ──────────────────────────────────────────────── */
-#slides-wrap{position:fixed;top:0;left:0;width:100%;height:100%;z-index:10}
+#slides-wrap{position:relative;z-index:10}
+/* ── SLIDES ─────────────────────────────────────────────────────── */
 .slide{
-  position:absolute;top:0;left:0;width:100%;height:100%;
+  position:relative;
+  min-height:100vh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:72px 64px 52px;overflow-y:auto;
-  opacity:0;transform:scale(0.93) translateY(18px);
-  transition:opacity .65s cubic-bezier(.4,0,.2,1),transform .65s cubic-bezier(.4,0,.2,1);
-  pointer-events:none;scrollbar-width:none}
-.slide::-webkit-scrollbar{display:none}
-.slide.active{opacity:1;transform:scale(1) translateY(0);pointer-events:all}
-/* ── NAV ────────────────────────────────────────────────────────── */
+  padding:90px 64px 80px;
+}
+/* Slides with lots of content: allow natural height */
+#s4,#s8{
+  height:auto;
+  justify-content:flex-start;
+  padding-top:90px;
+  padding-bottom:80px;
+}
+/* ── NAV DOTS ───────────────────────────────────────────────────── */
 #nav-dots{
   position:fixed;right:22px;top:50%;transform:translateY(-50%);
   z-index:200;display:flex;flex-direction:column;gap:10px;align-items:center}
@@ -40,63 +54,47 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   cursor:pointer;transition:all .3s ease;opacity:.5}
 .dot.active{background:var(--teal);transform:scale(1.5);opacity:1;
   box-shadow:0 0 8px var(--teal)}
+/* ── SLIDE INFO ─────────────────────────────────────────────────── */
 #slide-info{
   position:fixed;bottom:22px;left:28px;z-index:200;
   font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
   letter-spacing:.08em}
 #slide-info span{color:var(--teal)}
+/* ── NAV BUTTONS ─────────────────────────────────────────────────── */
 .nav-btn{
   position:fixed;bottom:16px;z-index:200;
   background:rgba(14,14,16,.85);border:1.5px solid rgba(91,222,227,.35);color:var(--teal);
-  width:46px;height:46px;border-radius:50%;cursor:pointer;
-  font-size:20px;display:flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:50%;cursor:pointer;
+  font-size:22px;display:flex;align-items:center;justify-content:center;
   transition:all .25s ease;backdrop-filter:blur(8px);
-  box-shadow:0 0 16px rgba(91,222,227,.12)}
+  box-shadow:0 0 18px rgba(91,222,227,.14)}
 .nav-btn:hover{border-color:var(--teal);color:var(--white);
-  box-shadow:0 0 24px rgba(91,222,227,.45),0 0 0 3px rgba(91,222,227,.1)}
+  box-shadow:0 0 28px rgba(91,222,227,.5),0 0 0 3px rgba(91,222,227,.12)}
 #prev-btn{right:72px}#next-btn{right:18px}
-/* ── SCROLL CHEVRON ──────────────────────────────────────────────── */
-#scroll-hint{
-  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
-  z-index:200;display:flex;flex-direction:column;align-items:center;gap:4px;
-  opacity:.55;transition:opacity .4s ease;pointer-events:none}
-#scroll-hint.hidden{opacity:0}
-#scroll-hint span{
-  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;
-  color:var(--teal);text-transform:uppercase}
-#scroll-chevron{
-  font-size:22px;color:var(--teal);
-  animation:bounce-down 1.8s ease-in-out infinite}
-@keyframes bounce-down{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(6px)}}
-/* ── SLIDE CHEVRON ───────────────────────────────────────────────── */
+/* ── SLIDE CHEVRON ─────────────────────────────────────────────── */
 .slide-chevron{
-  position:absolute;
-  bottom:24px;
-  left:50%;
-  transform:translateX(-50%);
-  color:var(--teal);
-  font-size:20px;
-  opacity:0.5;
+  position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  color:var(--teal);font-size:22px;opacity:0.5;
   animation:bounce-down 1.8s ease-in-out infinite;
-  pointer-events:none;
-  z-index:5;
-}
+  pointer-events:none;z-index:5}
+@keyframes bounce-down{
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(7px)}}
 /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
 .s-tag{
   font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;
-  letter-spacing:.18em;color:var(--teal);text-transform:uppercase;margin-bottom:20px}
+  letter-spacing:.18em;color:var(--teal);text-transform:uppercase;
+  margin-bottom:20px;flex-shrink:0}
 .s-h1{font-size:clamp(28px,4vw,52px);font-weight:800;line-height:1.1;
-  color:var(--white);letter-spacing:-.02em;margin-bottom:20px;text-align:center}
+  color:var(--white);letter-spacing:-.02em;margin-bottom:20px;text-align:center;flex-shrink:0}
 .s-h1 .tc{color:var(--teal)}
 .s-h2{font-size:clamp(20px,2.8vw,34px);font-weight:700;line-height:1.2;
-  color:var(--white);letter-spacing:-.015em;margin-bottom:20px;text-align:center}
+  color:var(--white);letter-spacing:-.015em;margin-bottom:20px;text-align:center;flex-shrink:0}
 .s-h2 .tc{color:var(--teal)}
 .s-sub{font-size:13px;color:var(--muted);text-align:center;
-  line-height:1.6;max-width:640px;margin-bottom:24px}
+  line-height:1.6;max-width:640px;margin-bottom:24px;flex-shrink:0}
 .s-body{font-size:13px;color:var(--white);line-height:1.75;
-  max-width:680px;text-align:center;margin-bottom:28px}
+  max-width:680px;text-align:center;margin-bottom:28px;flex-shrink:0}
 .tc{color:var(--teal)}
 /* ── CARDS ──────────────────────────────────────────────────────── */
 .card{
@@ -139,22 +137,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .badge{
   display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8.5px;
   letter-spacing:.1em;border-radius:4px;padding:3px 9px;margin-bottom:10px}
-.badge-live{background:rgba(91,222,227,.12);border:1px solid var(--teal);
-  color:var(--teal)}
-.badge-soon{background:rgba(136,136,132,.1);border:1px solid rgba(136,136,132,.3);
-  color:var(--muted)}
+.badge-live{background:rgba(91,222,227,.12);border:1px solid var(--teal);color:var(--teal)}
+.badge-soon{background:rgba(136,136,132,.1);border:1px solid rgba(136,136,132,.3);color:var(--muted)}
 /* ── PULL QUOTE ─────────────────────────────────────────────────── */
 .pull-quote{
   border-left:3px solid var(--teal);padding:14px 20px;
   background:rgba(91,222,227,.04);border-radius:0 8px 8px 0;
   font-style:italic;font-size:13px;color:var(--teal);line-height:1.7;
-  margin:16px 0;max-width:700px;text-align:left}
+  margin:20px 0;max-width:700px;text-align:left;align-self:center}
 .pull-quote-center{
-  border-left:none;border-top:1px solid rgba(91,222,227,.3);
-  border-bottom:1px solid rgba(91,222,227,.3);border-radius:0;
-  text-align:center;font-size:17px;font-style:italic;padding:28px 40px;
-  margin:16px auto;max-width:720px;background:rgba(91,222,227,.05);
-  color:var(--teal);line-height:1.75}
+  border-left:none;
+  border-top:1px solid rgba(91,222,227,.3);
+  border-bottom:1px solid rgba(91,222,227,.3);
+  border-radius:0;text-align:center;
+  font-size:19px;font-style:italic;
+  padding:32px 48px;
+  margin:28px auto;max-width:760px;
+  background:rgba(91,222,227,.05);
+  color:var(--teal);line-height:1.8;
+  align-self:center;width:100%}
 /* ── BULLET LIST ────────────────────────────────────────────────── */
 .bullet-list{list-style:none;text-align:left;width:100%;max-width:660px}
 .bullet-list li{
@@ -172,7 +173,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   50%{box-shadow:0 0 40px rgba(91,222,227,.35),0 0 80px rgba(91,222,227,.15)}}
 @keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.3}}
 .float-a{animation:float 4s ease-in-out infinite}
 .float-b{animation:float 4s ease-in-out infinite;animation-delay:.8s}
 .float-c{animation:float 4s ease-in-out infinite;animation-delay:1.6s}
@@ -180,8 +180,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .glow-btn{animation:glow-pulse 2.5s ease-in-out infinite}
 /* ── COVER STYLES ───────────────────────────────────────────────── */
 .cover-ring-wrap{
-  position:relative;width:360px;height:360px;margin:-20px auto 0;
+  position:relative;width:360px;height:360px;margin:-10px auto 0;
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* ── WORDMARK ───────────────────────────────────────────────────── */
 .cover-wordmark{
   font-family:'Comfortaa',cursive;
   font-size:80px;
@@ -192,36 +193,35 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   position:relative;
   z-index:2;
   line-height:1;
+  user-select:none;
 }
-/* Wrapper for the "i" with teal dot */
+/* dotless i wrapper — places a teal dot above via ::before */
 .wm-i{
   position:relative;
   display:inline-block;
   color:#E0E0E0;
-  font-style:normal;
 }
-/* Hide the native dot by using dotless i, then add teal dot via ::before */
 .wm-i::before{
   content:'';
   position:absolute;
-  top:-0.08em;
+  top:-0.10em;
   left:50%;
   transform:translateX(-50%);
-  width:0.12em;
-  height:0.12em;
+  width:0.13em;
+  height:0.13em;
   background:#5BDEE3;
   border-radius:50%;
-  box-shadow:0 0 6px rgba(91,222,227,0.7);
+  box-shadow:0 0 8px rgba(91,222,227,0.8),0 0 16px rgba(91,222,227,0.4);
 }
 .cover-tagline{
-  font-size:13px;color:var(--muted);text-align:center;margin:12px 0 6px;
+  font-size:13px;color:var(--muted);text-align:center;margin:0;
   letter-spacing:.01em;max-width:500px}
 .cover-subtitle{
-  font-size:15px;font-weight:600;color:var(--white);text-align:center;
-  margin-bottom:18px}
+  font-size:15px;font-weight:600;color:var(--white);text-align:center;margin:0}
 .cover-divider{
-  width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent);
-  margin:20px auto;box-shadow:0 0 12px var(--teal);opacity:.7}
+  width:200px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--teal),transparent);
+  margin:20px auto;box-shadow:0 0 12px var(--teal);opacity:.7;flex-shrink:0}
 /* ── TOC ────────────────────────────────────────────────────────── */
 .toc-item{
   display:flex;align-items:center;gap:16px;padding:12px 20px;border-radius:8px;
@@ -232,8 +232,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   width:24px;flex-shrink:0}
 .toc-title{font-size:13.5px;font-weight:600;color:var(--white);flex:1}
 .toc-pg{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
-/* ── COMPARISON TABLE ────────────────────────────────────────────── */
-.comp-table{width:100%;border-collapse:separate;border-spacing:0;margin:16px 0;
+/* ── COMPARISON TABLE ───────────────────────────────────────────── */
+.comp-table{width:100%;border-collapse:separate;border-spacing:0;margin:0;
   border-radius:8px;overflow:hidden}
 .comp-table th,.comp-table td{padding:9px 14px;font-size:11.5px;border-bottom:1px solid var(--border)}
 .comp-table th{font-weight:700;font-size:10.5px;background:var(--nav);color:var(--muted)}
@@ -243,7 +243,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .comp-table tr:last-child td{border-bottom:none}
 .comp-table tr:hover td{background:rgba(30,30,36,.5)}
 .comp-table tr:hover td.col-nuhai{background:rgba(91,222,227,.06)}
-/* ── 8-BRAIN ORBITAL ─────────────────────────────────────────────── */
+/* ── 8-BRAIN ORBITAL ────────────────────────────────────────────── */
 .brains-orbital{position:relative;width:280px;height:280px;flex-shrink:0}
 .brains-center{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -259,8 +259,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   transition:all .3s ease}
 .brain-node:hover{border-color:var(--teal);color:var(--teal);
   box-shadow:0 0 16px var(--glow);transform:scale(1.08)}
-/* ── PROCESS STEPS ───────────────────────────────────────────────── */
-.process-wrap{display:flex;gap:8px;align-items:stretch;width:100%;position:relative;margin-top:28px}
+/* ── PROCESS STEPS ──────────────────────────────────────────────── */
+.process-wrap{display:flex;gap:8px;align-items:stretch;width:100%;position:relative}
 .process-step{flex:1;background:var(--card);border:1px solid var(--border);
   border-radius:10px;padding:20px 14px;position:relative}
 .process-step::before{content:'';position:absolute;top:0;left:0;right:0;
@@ -273,7 +273,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .process-arrow{
   display:flex;align-items:center;color:var(--teal);font-size:16px;flex-shrink:0;
   animation:float2 3s ease-in-out infinite}
-/* ── INDUSTRIES ──────────────────────────────────────────────────── */
+/* ── INDUSTRIES ─────────────────────────────────────────────────── */
 .industry-tag{
   background:var(--card);border:1px solid var(--border);border-left:3px solid var(--teal);
   border-radius:6px;padding:10px 14px;transition:all .3s ease}
@@ -282,7 +282,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .industry-num{font-family:'JetBrains Mono',monospace;font-size:8.5px;
   color:var(--teal);display:block;margin-bottom:3px}
 .industry-name{font-size:12px;font-weight:600;color:var(--white)}
-/* ── CTA ─────────────────────────────────────────────────────────── */
+/* ── CTA ────────────────────────────────────────────────────────── */
 .cta-btn{
   display:inline-flex;align-items:center;gap:10px;
   background:var(--teal);color:var(--bg);font-weight:700;font-size:14px;
@@ -290,10 +290,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   letter-spacing:.02em;transition:all .3s ease;text-decoration:none}
 .cta-btn:hover{transform:translateY(-2px);
   box-shadow:0 12px 40px rgba(91,222,227,.4),0 0 0 3px rgba(91,222,227,.15)}
-.pricing-block{text-align:center;margin:20px 0}
+.pricing-block{text-align:center;margin:4px 0}
 .pricing-label{font-family:'JetBrains Mono',monospace;font-size:8.5px;
   color:var(--teal);letter-spacing:.14em;display:block;margin-bottom:8px}
-.pricing-amount{font-size:22px;font-weight:800;color:var(--white);
+.pricing-amount{font-size:17px;font-weight:500;color:var(--white);
   display:block;margin-bottom:6px}
 .pricing-note{font-size:12px;color:var(--muted)}
 .contact-card{
@@ -306,7 +306,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .contact-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;
   color:var(--muted);width:100px;flex-shrink:0}
 .contact-val{font-size:12px;color:var(--white)}
-/* ── PERSPECTIVE GRID BG ──────────────────────────────────────────── */
+/* ── PERSPECTIVE GRID BG ─────────────────────────────────────────── */
 .persp-grid-bg{
   position:absolute;inset:0;z-index:-1;
   background:
@@ -315,34 +315,39 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   background-size:48px 48px;
   perspective:600px;transform:rotateX(30deg) scale(1.4);
   transform-origin:center 60%;pointer-events:none;opacity:.7}
-/* ── SPACERS ─────────────────────────────────────────────────────── */
-.gap8{height:8px}.gap12{height:12px}.gap16{height:16px}
-.gap20{height:20px}.gap24{height:24px}.gap28{height:28px}.gap32{height:32px}
-/* ── RESPONSIVE ──────────────────────────────────────────────────── */
+/* ── SPACERS ────────────────────────────────────────────────────── */
+.gap8{height:8px;flex-shrink:0}.gap12{height:12px;flex-shrink:0}
+.gap16{height:16px;flex-shrink:0}.gap20{height:20px;flex-shrink:0}
+.gap24{height:24px;flex-shrink:0}.gap28{height:28px;flex-shrink:0}
+.gap32{height:32px;flex-shrink:0}.gap40{height:40px;flex-shrink:0}
+/* ── RESPONSIVE ─────────────────────────────────────────────────── */
 @media(max-width:768px){
-  .slide{padding:72px 24px 50px}
+  .slide{padding:80px 20px 70px}
+  #s4,#s8{padding:80px 20px 70px}
   .grid3,.grid4{grid-template-columns:repeat(2,1fr)}
   .grid-23{grid-template-columns:repeat(2,1fr)}
   .process-wrap{flex-direction:column}
   .process-arrow{display:none}
-  /* Slide 1 — cover wordmark */
+  /* Wordmark mobile */
   .cover-wordmark{font-size:52px;letter-spacing:2px}
-  /* Slide 1 — center lone 3rd stat card */
+  /* Slide 1 — center 3rd stat card */
   #s0 .grid3{grid-template-columns:repeat(2,1fr)}
   #s0 .grid3 .stat-card:last-child{grid-column:1/-1;max-width:220px;margin:0 auto}
-  /* Slide 4 — bilingual line spacing */
-  #s3 p[style*="عربي"],#s3 p[style*="English"]{margin-top:32px}
-  /* Slide 5 — center brains orbital */
-  #s4 .brains-orbital{transform:scale(0.72);transform-origin:top center;margin:0 auto}
-  #s4>div[style*="display:flex"]{justify-content:center}
-  /* Slide 9 — min spacing between sections */
+  /* Slide 4 — brains orbital */
+  #s4 .brains-orbital{transform:scale(0.72);transform-origin:top center;margin:0 auto;display:block}
+  /* Pull quote */
+  .pull-quote-center{font-size:15px;padding:24px 20px}
+  /* Nav */
+  .nav-btn{width:42px;height:42px;font-size:18px}
+  #prev-btn{right:60px}
+  /* Comp table */
   #s8 .comp-table{font-size:10px}
-  #s8 .gap16{height:20px}
-  #s8 .grid3{gap:12px}
-  .brains-orbital{width:220px;height:220px}
-  .pull-quote-center{font-size:14px;padding:20px 20px}
-  .nav-btn{width:40px;height:40px;font-size:18px}
-  #scroll-hint{bottom:80px}
+  /* Slide 9 stacking */
+  #s8 .grid3{gap:12px;margin-top:16px}
+}
+@media(max-width:480px){
+  .cover-wordmark{font-size:44px;letter-spacing:2px}
+  .brains-orbital{width:240px;height:240px}
 }
 </style>
 </head>
@@ -354,16 +359,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 
 <div id="slides-wrap">
 
-<!-- ────────────────── SLIDE 1 · COVER ────────────────── -->
-<div class="slide active" id="s0" style="gap:24px">
+<!-- ════════════════ SLIDE 1 · COVER ════════════════ -->
+<section class="slide" id="s0">
   <div class="s-tag">ORACLE · Business Growth Intelligence</div>
   <div class="cover-ring-wrap" id="cover-ring-wrap">
-    <!-- Three.js torus renders on canvas behind this -->
     <div class="cover-wordmark">nuha<span class="wm-i">ı</span></div>
   </div>
+  <div class="gap20"></div>
   <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
+  <div class="gap16"></div>
   <p class="cover-subtitle">AI Marketing System &amp; Business Growth Intelligence</p>
   <div class="cover-divider"></div>
+  <div class="gap8"></div>
   <div class="grid3" style="max-width:540px;margin:0 auto">
     <div class="stat-card float-a">
       <span class="stat-num">8</span>
@@ -382,15 +389,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
   </div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 2 · TOC ──────────────────── -->
-<div class="slide" id="s1">
+<!-- ════════════════ SLIDE 2 · TOC ════════════════ -->
+<section class="slide" id="s1">
   <div class="persp-grid-bg"></div>
   <div class="s-tag">CONTENTS</div>
   <div class="s-h1">Company Profile <span class="tc">2026</span></div>
-  <div class="gap24"></div>
-  <div style="width:100%;max-width:560px;display:flex;flex-direction:column;gap:12px">
+  <div class="gap8"></div>
+  <div style="width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px">
     <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-pg">p.03</span></div>
     <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">About NUHAI</span><span class="toc-pg">p.04</span></div>
     <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">The ORACLE AI System</span><span class="toc-pg">p.05</span></div>
@@ -403,46 +410,45 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">Get in Touch</span><span class="toc-pg">p.12</span></div>
   </div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 3 · EXEC SUMMARY ─────────── -->
-<div class="slide" id="s2">
+<!-- ════════════════ SLIDE 3 · EXEC SUMMARY ════════════════ -->
+<section class="slide" id="s2">
   <div class="s-tag">01 · EXECUTIVE SUMMARY</div>
   <div class="s-h1">Business Growth Intelligence.<br><span class="tc">Powered by AI.</span></div>
   <p class="s-body">NUHAI is an AI-powered business growth intelligence system headquartered in Dubai, UAE. Purpose-built for the Gulf market, combining autonomous AI technology with deep cultural intelligence to deliver measurable, guaranteed revenue outcomes. At the core is ORACLE: 35 specialized AI agents working in parallel across 8 department brains.</p>
-  <div style="margin-top:28px;width:100%">
-    <div class="grid4" style="max-width:720px;margin:0 auto">
-      <div class="stat-card float-a">
-        <span class="stat-num">8</span>
-        <span class="stat-lbl">Department Brains</span>
-        <span class="stat-sub">35+ Agents</span>
-      </div>
-      <div class="stat-card float-b">
-        <span class="stat-num">89%</span>
-        <span class="stat-lbl">Prediction Accuracy</span>
-        <span class="stat-sub">Gulf Campaigns</span>
-      </div>
-      <div class="stat-card float-c">
-        <span class="stat-num">24/7</span>
-        <span class="stat-lbl">Autonomous Operation</span>
-        <span class="stat-sub">No bottlenecks</span>
-      </div>
-      <div class="stat-card float-d">
-        <span class="stat-num">9</span>
-        <span class="stat-lbl">Cultural Profiles</span>
-        <span class="stat-sub">Gulf-Calibrated</span>
-      </div>
+  <div class="gap20"></div>
+  <div class="grid4" style="max-width:720px;margin:0 auto;width:100%">
+    <div class="stat-card float-a">
+      <span class="stat-num">8</span>
+      <span class="stat-lbl">Department Brains</span>
+      <span class="stat-sub">35+ Agents</span>
+    </div>
+    <div class="stat-card float-b">
+      <span class="stat-num">89%</span>
+      <span class="stat-lbl">Prediction Accuracy</span>
+      <span class="stat-sub">Gulf Campaigns</span>
+    </div>
+    <div class="stat-card float-c">
+      <span class="stat-num">24/7</span>
+      <span class="stat-lbl">Autonomous Operation</span>
+      <span class="stat-sub">No bottlenecks</span>
+    </div>
+    <div class="stat-card float-d">
+      <span class="stat-num">9</span>
+      <span class="stat-lbl">Cultural Profiles</span>
+      <span class="stat-sub">Gulf-Calibrated</span>
     </div>
   </div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 4 · ABOUT ────────────────── -->
-<div class="slide" id="s3" style="align-items:stretch">
-  <div style="text-align:center"><div class="s-tag">02 · ABOUT NUHAI</div></div>
+<!-- ════════════════ SLIDE 4 · ABOUT NUHAI ════════════════ -->
+<section class="slide" id="s3">
+  <div class="s-tag" style="text-align:center">02 · ABOUT NUHAI</div>
   <div class="s-h2">The Intelligence Layer for <span class="tc">Gulf Business Growth</span></div>
   <div class="gap20"></div>
-  <div class="grid3">
+  <div class="grid3" style="width:100%;max-width:900px">
     <div class="card card-3d">
       <div class="s-tag" style="margin-bottom:8px">Our Origin</div>
       <p style="font-size:12px;color:var(--muted);line-height:1.7">Born at the intersection of Gulf culture, global ambition, and powerful AI. Built in Dubai because the team understands multicultural markets and the speed at which business moves in the region.</p>
@@ -456,42 +462,43 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       <p style="font-size:12px;color:var(--muted);line-height:1.7">Not a Marketing Agency. Not a Software Tool. Not a Consultant. A Growth Intelligence System: AI that reads, predicts, and executes with guaranteed outcomes.</p>
     </div>
   </div>
-  <div class="gap16"></div>
+  <div class="gap24"></div>
   <div class="pull-quote pull-quote-center">"NUHAI is not simple automation. It is an autonomous AI marketing brain that grows, compounding intelligence with every client, every campaign, and every data point."</div>
-  <div class="gap16"></div>
-  <div class="grid4" style="max-width:640px;margin:0 auto">
+  <div class="gap24"></div>
+  <div class="grid4" style="max-width:640px;margin:0 auto;width:100%">
     <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">AI-Native</span></div>
     <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">Gulf-First</span></div>
     <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">Intelligence-Driven</span></div>
     <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">Growth-Obsessed</span></div>
   </div>
-  <div class="gap12"></div>
-  <p style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:32px">English &nbsp;·&nbsp; عربي</p>
+  <div class="gap32"></div>
+  <p style="font-size:11px;color:var(--muted);text-align:center">English &nbsp;·&nbsp; &#1593;&#1585;&#1576;&#1610;</p>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 5 · ORACLE ───────────────── -->
-<div class="slide" id="s4" style="justify-content:flex-start">
+<!-- ════════════════ SLIDE 5 · ORACLE ════════════════ -->
+<section class="slide" id="s4">
   <div class="gap8"></div>
   <div class="s-tag">03 · THE ORACLE AI SYSTEM</div>
   <div class="s-h2">Meet <span class="tc">ORACLE</span></div>
-  <div class="s-tag tc" style="font-size:12px;letter-spacing:.04em;color:var(--teal);margin-bottom:6px">8-Brain Autonomous Architecture</div>
-  <p class="s-sub" style="margin-bottom:16px">ORACLE runs 8 independent department brains: Creative, Intelligence, Media, Learning, Performance, Strategy, Growth, and Client. Each manages its own agents autonomously · every function runs in parallel without bottlenecks.</p>
+  <div class="s-tag" style="font-size:12px;letter-spacing:.04em;margin-bottom:20px">8-Brain Autonomous Architecture</div>
+  <p class="s-sub">ORACLE runs 8 independent department brains: Creative, Intelligence, Media, Learning, Performance, Strategy, Growth, and Client. Each manages its own agents autonomously · every function runs in parallel without bottlenecks.</p>
 
-  <div class="grid3" style="margin-bottom:16px">
+  <div class="grid3" style="width:100%;max-width:900px;margin-bottom:0">
     <div class="card card-left"><strong class="tc" style="font-size:13px;display:block;margin-bottom:6px">Reads</strong><p style="font-size:11.5px;color:var(--muted);line-height:1.65">Ingests market signals, competitor moves, audience behaviour, and regional trends in real-time.</p></div>
     <div class="card card-left"><strong class="tc" style="font-size:13px;display:block;margin-bottom:6px">Predicts</strong><p style="font-size:11.5px;color:var(--muted);line-height:1.65">Forecasts campaign outcomes, conversion rates, and growth trajectories at 89% accuracy.</p></div>
     <div class="card card-left"><strong class="tc" style="font-size:13px;display:block;margin-bottom:6px">Executes</strong><p style="font-size:11.5px;color:var(--muted);line-height:1.65">Deploys full marketing strategies: content, ads, SEO, automation, without human bottlenecks.</p></div>
   </div>
 
-  <!-- 8 Brains orbital + bullets side by side -->
-  <div style="display:flex;gap:32px;align-items:center;width:100%;justify-content:center;flex-wrap:wrap;padding-top:40px">
+  <div class="gap40"></div>
+
+  <!-- 8 Brains orbital + capabilities -->
+  <div style="display:flex;gap:40px;align-items:flex-start;width:100%;max-width:900px;justify-content:center;flex-wrap:wrap">
     <div class="brains-orbital" id="brains-orbital">
       <div class="brains-center">ORACLE<br>8 BRAINS</div>
-      <!-- nodes positioned by JS -->
     </div>
-    <div style="flex:1;min-width:260px;max-width:360px">
-      <p style="font-size:11px;font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:.04em">KEY CAPABILITIES</p>
+    <div style="flex:1;min-width:260px;max-width:380px">
+      <p style="font-size:11px;font-weight:700;color:var(--white);margin-bottom:12px;letter-spacing:.04em">KEY CAPABILITIES</p>
       <ul class="bullet-list" style="font-size:11.5px">
         <li><div><strong>Compounding Intelligence</strong><span class="tc"> · </span>Every client interaction makes the system smarter</div></li>
         <li><div><strong>Cultural Intelligence</strong><span class="tc"> · </span>Built-in understanding of Gulf cultural rhythms</div></li>
@@ -504,112 +511,117 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       </ul>
     </div>
   </div>
+  <div class="gap32"></div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 6 · PRODUCTS ─────────────── -->
-<div class="slide" id="s5" style="justify-content:center">
+<!-- ════════════════ SLIDE 6 · PRODUCTS ════════════════ -->
+<section class="slide" id="s5">
   <div class="s-tag">04 · PRODUCTS &amp; SERVICES</div>
   <div class="s-h1">Intelligence <span class="tc">Suite</span></div>
-  <div style="margin-top:28px;width:100%">
-    <div class="grid3" style="max-width:820px;margin:0 auto">
-      <div class="card card-teal-border card-3d">
-        <span class="badge badge-live">LIVE</span>
-        <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">NUHAI Studio</div>
-        <p style="font-size:11.5px;color:var(--muted);line-height:1.7">AI-powered marketing automation. Autonomous campaign creation, cultural intelligence, real-time optimization, competitor mapping, and revenue prediction with confidence scores. WhatsApp sequence building and broadcasting (Gulf-native channel). 9-profile cultural calibration per campaign. 4-level agent autonomy system.</p>
-      </div>
-      <div class="card card-3d">
-        <span class="badge badge-soon">COMING SOON</span>
-        <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">NUHAI Intelligence</div>
-        <p style="font-size:11.5px;color:var(--muted);line-height:1.7">Real-time Gulf market prediction engine. Market predictions, competitor tracking, trend detection, and demand forecasting.</p>
-      </div>
-      <div class="card card-3d">
-        <span class="badge badge-soon">COMING SOON</span>
-        <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">NUHAI Labs</div>
-        <p style="font-size:11.5px;color:var(--muted);line-height:1.7">Experimental AI automation tools. Custom AI workflows, intelligent data pipelines, and integration APIs.</p>
-      </div>
+  <div class="gap24"></div>
+  <div class="grid3" style="max-width:860px;margin:0 auto;width:100%">
+    <div class="card card-teal-border card-3d">
+      <span class="badge badge-live">LIVE</span>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:12px">NUHAI Studio</div>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.75">AI-powered marketing automation. Autonomous campaign creation, cultural intelligence, real-time optimization, competitor mapping, and revenue prediction with confidence scores.</p>
+      <ul style="list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:6px">
+        <li style="font-size:11px;color:var(--muted);display:flex;align-items:flex-start;gap:8px"><span style="color:var(--teal);flex-shrink:0">·</span>WhatsApp sequence building and broadcasting (Gulf-native channel)</li>
+        <li style="font-size:11px;color:var(--muted);display:flex;align-items:flex-start;gap:8px"><span style="color:var(--teal);flex-shrink:0">·</span>9-profile cultural calibration per campaign</li>
+        <li style="font-size:11px;color:var(--muted);display:flex;align-items:flex-start;gap:8px"><span style="color:var(--teal);flex-shrink:0">·</span>4-level agent autonomy system that compounds over time</li>
+      </ul>
+    </div>
+    <div class="card card-3d">
+      <span class="badge badge-soon">COMING SOON</span>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:12px">NUHAI Intelligence</div>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.75">Real-time Gulf market prediction engine. Market predictions, competitor tracking, trend detection, and demand forecasting.</p>
+    </div>
+    <div class="card card-3d">
+      <span class="badge badge-soon">COMING SOON</span>
+      <div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:12px">NUHAI Labs</div>
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.75">Experimental AI automation tools. Custom AI workflows, intelligent data pipelines, and integration APIs.</p>
     </div>
   </div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 7 · PROCESS ─────────────── -->
-<div class="slide" id="s6">
+<!-- ════════════════ SLIDE 7 · PROCESS ════════════════ -->
+<section class="slide" id="s6">
   <div class="s-tag">05 · OUR PROCESS</div>
   <div class="s-h1">How We <span class="tc">Work</span></div>
   <p class="s-sub">Every engagement follows a structured, data-driven process designed to deliver measurable outcomes from day one.</p>
-  <div class="process-wrap">
+  <div class="gap20"></div>
+  <div class="process-wrap" style="max-width:960px;margin:0 auto;width:100%">
     <div class="process-step">
       <span class="process-num">01</span>
       <span class="process-title">CONNECT YOUR DATA</span>
       <p style="font-size:11.5px;color:var(--muted);line-height:1.65">Link business data, analytics, and marketing channels. ORACLE ingests everything in minutes.</p>
     </div>
-    <div class="process-arrow">→</div>
+    <div class="process-arrow">&#8594;</div>
     <div class="process-step">
       <span class="process-num">02</span>
       <span class="process-title">ORACLE ANALYZES</span>
       <p style="font-size:11.5px;color:var(--muted);line-height:1.65">8 department brains activate simultaneously · Creative, Intelligence, Media, Learning, Performance, Strategy, Growth, and Client · Each brain manages its own agents, compounding intelligence with every data point.</p>
     </div>
-    <div class="process-arrow">→</div>
+    <div class="process-arrow">&#8594;</div>
     <div class="process-step">
       <span class="process-num">03</span>
       <span class="process-title">CAMPAIGNS DEPLOY</span>
       <p style="font-size:11.5px;color:var(--muted);line-height:1.65">AI creates, tests, and optimizes campaigns in real time. Underperformers cut immediately, winners scaled aggressively.</p>
     </div>
-    <div class="process-arrow">→</div>
+    <div class="process-arrow">&#8594;</div>
     <div class="process-step">
       <span class="process-num">04</span>
       <span class="process-title">REVENUE TRACKED</span>
       <p style="font-size:11.5px;color:var(--muted);line-height:1.65">Every engagement starts with a documented revenue prediction. Clear targets and measurable outcomes · full transparency.</p>
     </div>
   </div>
-  <div class="gap20"></div>
-  <div class="pull-quote">"Every campaign begins with a documented revenue prediction backed by data. Every outcome is tracked, measured, and reported with complete transparency."</div>
+  <div class="gap24"></div>
+  <div class="pull-quote" style="align-self:center;max-width:700px">"Every campaign begins with a documented revenue prediction backed by data. Every outcome is tracked, measured, and reported with complete transparency."</div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 8 · VALUES ──────────────── -->
-<div class="slide" id="s7">
+<!-- ════════════════ SLIDE 8 · CORE VALUES ════════════════ -->
+<section class="slide" id="s7">
   <div class="s-tag">06 · CORE VALUES</div>
   <div class="s-h1">What We <span class="tc">Stand For</span></div>
-  <div style="margin-top:28px;width:100%">
-    <div class="grid2" style="max-width:720px;margin:0 auto">
-      <div class="card card-3d">
-        <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">S</div>
-        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Speed</div>
-        <p style="font-size:12px;color:var(--muted);line-height:1.7">Act on intelligence before the market shifts. Every second of delay is a missed opportunity.</p>
-      </div>
-      <div class="card card-3d">
-        <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">P</div>
-        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Precision</div>
-        <p style="font-size:12px;color:var(--muted);line-height:1.7">Documented predictions with confidence scores. No vague promises. Every outcome accountable.</p>
-      </div>
-      <div class="card card-3d">
-        <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">T</div>
-        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Trust</div>
-        <p style="font-size:12px;color:var(--muted);line-height:1.7">Performance-fee model available. Full transparency at every step · every prediction, campaign decision, and outcome is documented and accountable.</p>
-      </div>
-      <div class="card card-3d">
-        <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">G</div>
-        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Gulf Multicultural Strength</div>
-        <p style="font-size:12px;color:var(--muted);line-height:1.7">9 distinct cultural profiles: Emirati, Saudi, South Asian, Levantine, African, Filipino, Chinese, Russian, British/European. Every campaign calibrated to nationality, not a generic Gulf approach.</p>
-      </div>
+  <div class="gap24"></div>
+  <div class="grid2" style="max-width:760px;margin:0 auto;width:100%">
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">S</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Speed</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Act on intelligence before the market shifts. Every second of delay is a missed opportunity.</p>
+    </div>
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">P</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Precision</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Documented predictions with confidence scores. No vague promises. Every outcome accountable.</p>
+    </div>
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">T</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Trust</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Performance-fee model available. Full transparency at every step · every prediction, campaign decision, and outcome is documented and accountable.</p>
+    </div>
+    <div class="card card-3d">
+      <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:8px">G</div>
+      <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px">Gulf Multicultural Strength</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">9 distinct cultural profiles: Emirati, Saudi, South Asian, Levantine, African, Filipino, Chinese, Russian, British/European. Every campaign calibrated to nationality, not a generic Gulf approach.</p>
     </div>
   </div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 9 · WHY NUHAI ───────────── -->
-<div class="slide" id="s8" style="justify-content:flex-start">
+<!-- ════════════════ SLIDE 9 · WHY NUHAI ════════════════ -->
+<section class="slide" id="s8">
   <div class="gap8"></div>
   <div class="s-tag">07 · WHY NUHAI</div>
   <div class="s-h2">A New Category of <span class="tc">Growth</span></div>
-  <div class="gap16"></div>
-  <div style="width:100%;overflow-x:auto">
+  <div class="gap20"></div>
+  <div style="width:100%;overflow-x:auto;max-width:860px">
     <table class="comp-table">
       <thead>
         <tr>
-          <th style="width:100px"></th>
+          <th style="width:110px"></th>
           <th>Traditional Agency</th>
           <th>Marketing Software</th>
           <th class="col-nuhai">NUHAI</th>
@@ -625,100 +637,103 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       </tbody>
     </table>
   </div>
+  <div class="gap24"></div>
+  <p style="font-size:11px;font-weight:700;color:var(--white);text-align:center;letter-spacing:.04em">THE NUHAI ADVANTAGE: WHAT NO OTHER SYSTEM OFFERS</p>
   <div class="gap16"></div>
-  <p style="font-size:11px;font-weight:700;color:var(--white);text-align:center;letter-spacing:.04em;margin-bottom:12px">THE NUHAI ADVANTAGE: WHAT NO OTHER SYSTEM OFFERS</p>
-  <div class="grid3" style="max-width:720px;margin:0 auto;margin-top:24px">
+  <div class="grid3" style="max-width:860px;margin:0 auto;width:100%">
     <div class="card"><div class="s-tag" style="margin-bottom:6px">8-Brain Architecture</div><p style="font-size:11px;color:var(--muted)">The only Gulf AI system with independent department brains running in parallel</p></div>
-    <div class="card"><div class="s-tag" style="margin-bottom:6px">Gulf Multicultural Strength</div><p style="font-size:11px;color:var(--muted)">9 distinct cultural profiles · Emirati, Saudi, South Asian, Levantine, African, Filipino, Chinese, Russian, British/European. Every campaign calibrated to your audience's nationality, not a generic Gulf approach.</p></div>
+    <div class="card"><div class="s-tag" style="margin-bottom:6px">Gulf Multicultural Strength</div><p style="font-size:11px;color:var(--muted)">9 distinct cultural profiles · Emirati, Saudi, South Asian, Levantine, African, Filipino, Chinese, Russian, British/European. Every campaign calibrated to nationality.</p></div>
     <div class="card"><div class="s-tag" style="margin-bottom:6px">WhatsApp Native</div><p style="font-size:11px;color:var(--muted)">Dedicated WhatsApp agents built for the Gulf's dominant communication channel</p></div>
     <div class="card"><div class="s-tag" style="margin-bottom:6px">Competitor Data Walls</div><p style="font-size:11px;color:var(--muted)">Your intelligence is yours alone, fully isolated from competing clients</p></div>
     <div class="card"><div class="s-tag" style="margin-bottom:6px">Compounding Intelligence</div><p style="font-size:11px;color:var(--muted)">4-level autonomy system that gets smarter the longer you stay</p></div>
     <div class="card"><div class="s-tag" style="margin-bottom:6px">Performance-Fee Model</div><p style="font-size:11px;color:var(--muted)">Aligned incentives. Our success is tied directly to your growth</p></div>
   </div>
+  <div class="gap32"></div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 10 · NUMBERS ─────────────── -->
-<div class="slide" id="s9">
+<!-- ════════════════ SLIDE 10 · NUMBERS ════════════════ -->
+<section class="slide" id="s9">
   <div class="s-tag">08 · BY THE NUMBERS</div>
   <div class="s-h1">NUHAI in <span class="tc">Numbers</span></div>
-  <div style="margin-top:28px;width:100%">
-    <div class="grid-23" style="max-width:760px;margin:0 auto">
-      <div class="stat-card float-a"><span class="stat-num" style="font-size:52px">8</span><span class="stat-lbl">Department Brains</span><span class="stat-sub">Running in parallel autonomously</span></div>
-      <div class="stat-card float-b"><span class="stat-num" style="font-size:52px">35+</span><span class="stat-lbl">Specialized AI Agents</span><span class="stat-sub">Across all departments</span></div>
-      <div class="stat-card float-c"><span class="stat-num" style="font-size:52px">9</span><span class="stat-lbl">Cultural Profiles</span><span class="stat-sub">Calibrated per campaign</span></div>
-      <div class="stat-card float-d"><span class="stat-num" style="font-size:52px">89%</span><span class="stat-lbl">Prediction Accuracy</span><span class="stat-sub">On Gulf campaigns</span></div>
-      <div class="stat-card" style="animation:float 4s ease-in-out infinite;animation-delay:.5s"><span class="stat-num" style="font-size:52px">18</span><span class="stat-lbl">Industry Verticals</span><span class="stat-sub">Served across the GCC</span></div>
-      <div class="stat-card" style="animation:float 4s ease-in-out infinite;animation-delay:1.2s"><span class="stat-num" style="font-size:52px">24/7</span><span class="stat-lbl">Autonomous Operation</span><span class="stat-sub">Without human bottlenecks</span></div>
-    </div>
+  <div class="gap24"></div>
+  <div class="grid-23" style="max-width:800px;margin:0 auto;width:100%">
+    <div class="stat-card float-a"><span class="stat-num" style="font-size:clamp(32px,5vw,52px)">8</span><span class="stat-lbl">Department Brains</span><span class="stat-sub">Running in parallel autonomously</span></div>
+    <div class="stat-card float-b"><span class="stat-num" style="font-size:clamp(32px,5vw,52px)">35+</span><span class="stat-lbl">Specialized AI Agents</span><span class="stat-sub">Across all departments</span></div>
+    <div class="stat-card float-c"><span class="stat-num" style="font-size:clamp(32px,5vw,52px)">9</span><span class="stat-lbl">Cultural Profiles</span><span class="stat-sub">Calibrated per campaign</span></div>
+    <div class="stat-card float-d"><span class="stat-num" style="font-size:clamp(32px,5vw,52px)">89%</span><span class="stat-lbl">Prediction Accuracy</span><span class="stat-sub">On Gulf campaigns</span></div>
+    <div class="stat-card" style="animation:float 4s ease-in-out infinite;animation-delay:.5s"><span class="stat-num" style="font-size:clamp(32px,5vw,52px)">18</span><span class="stat-lbl">Industry Verticals</span><span class="stat-sub">Served across the GCC</span></div>
+    <div class="stat-card" style="animation:float 4s ease-in-out infinite;animation-delay:1.2s"><span class="stat-num" style="font-size:clamp(32px,5vw,52px)">24/7</span><span class="stat-lbl">Autonomous Operation</span><span class="stat-sub">Without human bottlenecks</span></div>
   </div>
   <div class="slide-chevron">&#8595;</div>
-</div>
+</section>
 
-<!-- ────────────────── SLIDE 11 · INDUSTRIES ──────────── -->
-<div class="slide" id="s10">
+<!-- ════════════════ SLIDE 11 · INDUSTRIES ════════════════ -->
+<section class="slide" id="s10">
   <div class="s-tag">09 · INDUSTRIES WE SERVE</div>
   <div class="s-h1">Industries We <span class="tc">Serve</span></div>
-  <div style="margin-top:24px;width:100%">
-    <div class="grid-23" style="max-width:800px;margin:0 auto">
-      <div class="industry-tag"><span class="industry-num">01</span><span class="industry-name">F&amp;B</span></div>
-      <div class="industry-tag"><span class="industry-num">02</span><span class="industry-name">Luxury &amp; Fashion</span></div>
-      <div class="industry-tag"><span class="industry-num">03</span><span class="industry-name">E-Commerce</span></div>
-      <div class="industry-tag"><span class="industry-num">04</span><span class="industry-name">Automotive</span></div>
-      <div class="industry-tag"><span class="industry-num">05</span><span class="industry-name">Healthcare</span></div>
-      <div class="industry-tag"><span class="industry-num">06</span><span class="industry-name">Beauty &amp; Wellness</span></div>
-      <div class="industry-tag"><span class="industry-num">07</span><span class="industry-name">Hospitality</span></div>
-      <div class="industry-tag"><span class="industry-num">08</span><span class="industry-name">Finance &amp; Banking</span></div>
-      <div class="industry-tag"><span class="industry-num">09</span><span class="industry-name">Entertainment</span></div>
-      <div class="industry-tag"><span class="industry-num">10</span><span class="industry-name">Construction &amp; Real Estate</span></div>
-      <div class="industry-tag"><span class="industry-num">11</span><span class="industry-name">Technology &amp; SaaS</span></div>
-      <div class="industry-tag"><span class="industry-num">12</span><span class="industry-name">Education</span></div>
-      <div class="industry-tag"><span class="industry-num">13</span><span class="industry-name">Professional Services</span></div>
-      <div class="industry-tag"><span class="industry-num">14</span><span class="industry-name">Government &amp; Semi-Gov</span></div>
-      <div class="industry-tag"><span class="industry-num">15</span><span class="industry-name">Retail</span></div>
-      <div class="industry-tag"><span class="industry-num">16</span><span class="industry-name">Media &amp; Publishing</span></div>
-      <div class="industry-tag"><span class="industry-num">17</span><span class="industry-name">Sports &amp; Fitness</span></div>
-      <div class="industry-tag"><span class="industry-num">18</span><span class="industry-name">Legal &amp; Compliance</span></div>
-    </div>
+  <div class="gap24"></div>
+  <div class="grid-23" style="max-width:840px;margin:0 auto;width:100%">
+    <div class="industry-tag"><span class="industry-num">01</span><span class="industry-name">F&amp;B</span></div>
+    <div class="industry-tag"><span class="industry-num">02</span><span class="industry-name">Luxury &amp; Fashion</span></div>
+    <div class="industry-tag"><span class="industry-num">03</span><span class="industry-name">E-Commerce</span></div>
+    <div class="industry-tag"><span class="industry-num">04</span><span class="industry-name">Automotive</span></div>
+    <div class="industry-tag"><span class="industry-num">05</span><span class="industry-name">Healthcare</span></div>
+    <div class="industry-tag"><span class="industry-num">06</span><span class="industry-name">Beauty &amp; Wellness</span></div>
+    <div class="industry-tag"><span class="industry-num">07</span><span class="industry-name">Hospitality</span></div>
+    <div class="industry-tag"><span class="industry-num">08</span><span class="industry-name">Finance &amp; Banking</span></div>
+    <div class="industry-tag"><span class="industry-num">09</span><span class="industry-name">Entertainment</span></div>
+    <div class="industry-tag"><span class="industry-num">10</span><span class="industry-name">Construction &amp; Real Estate</span></div>
+    <div class="industry-tag"><span class="industry-num">11</span><span class="industry-name">Technology &amp; SaaS</span></div>
+    <div class="industry-tag"><span class="industry-num">12</span><span class="industry-name">Education</span></div>
+    <div class="industry-tag"><span class="industry-num">13</span><span class="industry-name">Professional Services</span></div>
+    <div class="industry-tag"><span class="industry-num">14</span><span class="industry-name">Government &amp; Semi-Gov</span></div>
+    <div class="industry-tag"><span class="industry-num">15</span><span class="industry-name">Retail</span></div>
+    <div class="industry-tag"><span class="industry-num">16</span><span class="industry-name">Media &amp; Publishing</span></div>
+    <div class="industry-tag"><span class="industry-num">17</span><span class="industry-name">Sports &amp; Fitness</span></div>
+    <div class="industry-tag"><span class="industry-num">18</span><span class="industry-name">Legal &amp; Compliance</span></div>
   </div>
-</div>
+  <div class="slide-chevron">&#8595;</div>
+</section>
 
-<!-- ────────────────── SLIDE 12 · GET IN TOUCH ────────── -->
-<div class="slide" id="s11" style="gap:20px">
-  <div class="s-tag" style="font-family:'JetBrains Mono',monospace;letter-spacing:.2em">BEGIN YOUR INTELLIGENCE JOURNEY</div>
+<!-- ════════════════ SLIDE 12 · GET IN TOUCH ════════════════ -->
+<section class="slide" id="s11">
+  <div class="s-tag" style="letter-spacing:.2em">BEGIN YOUR INTELLIGENCE JOURNEY</div>
+  <div class="gap8"></div>
   <div class="s-h1" style="font-size:clamp(26px,4vw,52px)">Ready to outgrow<br><span class="tc">the competition?</span></div>
+  <div class="gap8"></div>
   <p class="s-sub">"We don't just plan your growth. We engineer it."</p>
+  <div class="gap16"></div>
   <div class="pricing-block">
     <span class="pricing-label">INVESTMENT</span>
-    <span class="pricing-amount" style="font-size:16px;font-weight:500;color:var(--white)">Performance-fee model available</span>
+    <span class="pricing-amount">Performance-fee model available</span>
     <span class="pricing-note">Aligned incentives · transparent outcomes</span>
   </div>
+  <div class="gap20"></div>
   <a href="mailto:info@nuhai.net" class="cta-btn glow-btn">
     Get Started &nbsp;&rarr;
   </a>
+  <div class="gap24"></div>
   <div class="contact-card">
     <div class="contact-row"><span class="contact-lbl">Website</span><span class="contact-val">www.nuhai.net</span></div>
     <div class="contact-row"><span class="contact-lbl">Email</span><span class="contact-val">info@nuhai.net</span></div>
     <div class="contact-row"><span class="contact-lbl">Headquarters</span><span class="contact-val">Dubai, United Arab Emirates</span></div>
     <div class="contact-row"><span class="contact-lbl">Products</span><span class="contact-val">Studio (Live) &nbsp;|&nbsp; Intelligence (Coming Soon) &nbsp;|&nbsp; Labs (Coming Soon)</span></div>
   </div>
-  <p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-align:center">NUHAI © 2026. All rights reserved. Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
-</div>
+  <div class="gap20"></div>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-align:center">NUHAI &#169; 2026. All rights reserved. Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
+</section>
 
 </div><!-- /slides-wrap -->
 
-<!-- ── NAVIGATION ──────────────────────────────────────── -->
+<!-- ── NAVIGATION ──────────────────────────────────── -->
 <div id="nav-dots"></div>
 <div id="slide-info"><span id="si-num">01</span> / 12 &nbsp;&nbsp; <span id="si-title"></span></div>
-<button class="nav-btn" id="prev-btn">&#8592;</button>
-<button class="nav-btn" id="next-btn">&#8594;</button>
-<div id="scroll-hint">
-  <span>scroll to navigate</span>
-  <div id="scroll-chevron">&#8595;</div>
-</div>
+<button class="nav-btn" id="prev-btn" aria-label="Previous slide">&#8593;</button>
+<button class="nav-btn" id="next-btn" aria-label="Next slide">&#8595;</button>
 
 <script>
-// ─── Three.js Setup ───────────────────────────────────────────────
+// ─── Three.js Setup ──────────────────────────────────────────────
 const canvas = document.getElementById('bg-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -728,7 +743,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
 camera.position.z = 500;
 
-// ── Particles ────────────────────────────────────────────────────
+// ── Particles ──────────────────────────────────────────────────
 const PARTICLE_COUNT = 180;
 const pGeo = new THREE.BufferGeometry();
 const pPos = new Float32Array(PARTICLE_COUNT * 3);
@@ -748,7 +763,7 @@ const pMat = new THREE.PointsMaterial({ color: 0x5BDEE3, size: 1.8, transparent:
 const particles = new THREE.Points(pGeo, pMat);
 scene.add(particles);
 
-// ── Cover Torus ───────────────────────────────────────────────────
+// ── Cover Torus ───────────────────────────────────────────────
 const torusGeo = new THREE.TorusGeometry(130, 4.5, 16, 120);
 const torusMat = new THREE.MeshBasicMaterial({
   color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .45 });
@@ -756,7 +771,6 @@ const torus = new THREE.Mesh(torusGeo, torusMat);
 torus.visible = true;
 scene.add(torus);
 
-// Outer glow ring (larger, more transparent)
 const torusGlow = new THREE.Mesh(
   new THREE.TorusGeometry(148, 1.5, 8, 100),
   new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .12 })
@@ -764,7 +778,7 @@ const torusGlow = new THREE.Mesh(
 torusGlow.visible = true;
 scene.add(torusGlow);
 
-// ── ORACLE Sphere ─────────────────────────────────────────────────
+// ── ORACLE Sphere ─────────────────────────────────────────────
 const sphGeo = new THREE.SphereGeometry(90, 28, 28);
 const sphMat = new THREE.MeshBasicMaterial({
   color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .28 });
@@ -773,13 +787,12 @@ sphere.position.set(0, 120, 0);
 sphere.visible = false;
 scene.add(sphere);
 
-// ── Animate ───────────────────────────────────────────────────────
+// ── Animate ───────────────────────────────────────────────────
 let clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
   const t = clock.getElapsedTime();
 
-  // Particles drift
   const pa = pGeo.attributes.position.array;
   const W2 = window.innerWidth / 2, H2 = window.innerHeight / 2;
   for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -792,7 +805,6 @@ function animate() {
   }
   pGeo.attributes.position.needsUpdate = true;
 
-  // Torus rotation
   if (torus.visible) {
     torus.rotation.x = t * 0.18;
     torus.rotation.y = t * 0.28;
@@ -800,18 +812,15 @@ function animate() {
     torusGlow.rotation.x = t * 0.12;
     torusGlow.rotation.y = -t * 0.22;
   }
-
-  // Sphere rotation
   if (sphere.visible) {
     sphere.rotation.x = t * 0.14;
     sphere.rotation.y = t * 0.2;
   }
-
   renderer.render(scene, camera);
 }
 animate();
 
-// ─── Slide System ─────────────────────────────────────────────────
+// ─── Smooth Scroll Navigation ────────────────────────────────
 const SLIDES_DATA = [
   ['01', 'Cover'],
   ['02', 'Table of Contents'],
@@ -826,6 +835,7 @@ const SLIDES_DATA = [
   ['11', 'Industries We Serve'],
   ['12', 'Get in Touch'],
 ];
+
 const slides = Array.from(document.querySelectorAll('.slide'));
 let cur = 0;
 
@@ -834,55 +844,69 @@ const dotsEl = document.getElementById('nav-dots');
 SLIDES_DATA.forEach((_, i) => {
   const d = document.createElement('div');
   d.className = 'dot' + (i === 0 ? ' active' : '');
-  d.addEventListener('click', () => goTo(i));
+  d.addEventListener('click', () => scrollToSlide(i));
   dotsEl.appendChild(d);
 });
 
-function updateUI() {
-  // Dots
+function updateUI(n) {
+  cur = n;
   document.querySelectorAll('.dot').forEach((d, i) => {
-    d.classList.toggle('active', i === cur);
+    d.classList.toggle('active', i === n);
   });
-  // Info
-  document.getElementById('si-num').textContent = SLIDES_DATA[cur][0];
-  document.getElementById('si-title').textContent = SLIDES_DATA[cur][1];
-  // 3D objects
-  const onCover  = cur === 0;
-  const onOracle = cur === 4;
+  document.getElementById('si-num').textContent = SLIDES_DATA[n][0];
+  document.getElementById('si-title').textContent = SLIDES_DATA[n][1];
+
+  const onCover  = (n === 0);
+  const onOracle = (n === 4);
   torus.visible     = onCover;
   torusGlow.visible = onCover;
   sphere.visible    = onOracle;
-  // Particle opacity
-  pMat.opacity = onCover ? .22 : (cur === 11 ? .32 : .14);
+  pMat.opacity = onCover ? .22 : (n === 11 ? .32 : .14);
 }
 
-function goTo(n) {
+function scrollToSlide(n) {
   if (n < 0 || n >= slides.length) return;
-  slides[cur].classList.remove('active');
-  cur = n;
-  slides[cur].classList.add('active');
-  // Reset scroll position
-  slides[cur].scrollTop = 0;
-  updateUI();
+  slides[n].scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-document.getElementById('prev-btn').addEventListener('click', () => goTo(cur - 1));
-document.getElementById('next-btn').addEventListener('click', () => goTo(cur + 1));
+// IntersectionObserver: track which slide is visible
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+      const idx = slides.indexOf(entry.target);
+      if (idx !== -1 && idx !== cur) updateUI(idx);
+    }
+  });
+}, { threshold: 0.5 });
 
+slides.forEach(s => observer.observe(s));
+
+// Prev / Next buttons
+document.getElementById('prev-btn').addEventListener('click', () => scrollToSlide(cur - 1));
+document.getElementById('next-btn').addEventListener('click', () => scrollToSlide(cur + 1));
+
+// Keyboard navigation
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
-  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); scrollToSlide(cur + 1); }
+  if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  { e.preventDefault(); scrollToSlide(cur - 1); }
 });
 
-// Touch / swipe
-let tX = 0;
-document.addEventListener('touchstart', e => { tX = e.touches[0].clientX; }, { passive: true });
-document.addEventListener('touchend',   e => {
-  const dx = tX - e.changedTouches[0].clientX;
-  if (Math.abs(dx) > 50) goTo(cur + (dx > 0 ? 1 : -1));
+// Touch / swipe (vertical)
+let tY = 0, tLocked = false;
+document.addEventListener('touchstart', e => {
+  tY = e.touches[0].clientY;
+  tLocked = false;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  if (tLocked) return;
+  const dy = tY - e.changedTouches[0].clientY;
+  if (Math.abs(dy) > 60) {
+    tLocked = true;
+    scrollToSlide(cur + (dy > 0 ? 1 : -1));
+  }
 }, { passive: true });
 
-// ── Card 3D tilt ──────────────────────────────────────────────────
+// ── Card 3D tilt ──────────────────────────────────────────────
 document.querySelectorAll('.card-3d').forEach(card => {
   card.addEventListener('mousemove', e => {
     const r = card.getBoundingClientRect();
@@ -895,7 +919,7 @@ document.querySelectorAll('.card-3d').forEach(card => {
   });
 });
 
-// ── 8-Brain Orbital ───────────────────────────────────────────────
+// ── 8-Brain Orbital ───────────────────────────────────────────
 const brainNames = ['Creative','Intelligence','Media','Learning',
                     'Performance','Strategy','Growth','Client'];
 const orbital = document.getElementById('brains-orbital');
@@ -914,38 +938,27 @@ brainNames.forEach((name, i) => {
   orbital.appendChild(node);
 });
 
-// Draw orbital ring on an SVG overlay
+// SVG orbital ring
 const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
 svg.style.cssText = 'position:absolute;top:0;left:0;width:280px;height:280px;pointer-events:none';
 svg.setAttribute('viewBox','0 0 280 280');
 const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-circle.setAttribute('cx','140');circle.setAttribute('cy','140');
-circle.setAttribute('r','104');circle.setAttribute('fill','none');
-circle.setAttribute('stroke','rgba(91,222,227,0.18)');circle.setAttribute('stroke-width','1');
+circle.setAttribute('cx','140'); circle.setAttribute('cy','140');
+circle.setAttribute('r','104'); circle.setAttribute('fill','none');
+circle.setAttribute('stroke','rgba(91,222,227,0.18)'); circle.setAttribute('stroke-width','1');
 circle.setAttribute('stroke-dasharray','4 6');
 svg.appendChild(circle);
 orbital.appendChild(svg);
 
-// ── Resize ────────────────────────────────────────────────────────
+// ── Resize ─────────────────────────────────────────────────────
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Scroll hint — hide after first navigation
-const scrollHint = document.getElementById('scroll-hint');
-let hintDismissed = false;
-function dismissHint(){
-  if(!hintDismissed){ hintDismissed=true; scrollHint.classList.add('hidden'); }
-}
-document.getElementById('prev-btn').addEventListener('click', dismissHint);
-document.getElementById('next-btn').addEventListener('click', dismissHint);
-document.addEventListener('keydown', dismissHint);
-document.addEventListener('touchend', dismissHint);
-
 // Init
-updateUI();
+updateUI(0);
 </script>
 </body>
 </html>
