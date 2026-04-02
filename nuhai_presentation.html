@@ -46,14 +46,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   letter-spacing:.08em}
 #slide-info span{color:var(--teal)}
 .nav-btn{
-  position:fixed;bottom:18px;z-index:200;
-  background:transparent;border:1px solid var(--border);color:var(--muted);
-  width:34px;height:34px;border-radius:50%;cursor:pointer;
-  font-size:14px;display:flex;align-items:center;justify-content:center;
-  transition:all .25s ease}
-.nav-btn:hover{border-color:var(--teal);color:var(--teal);
-  box-shadow:0 0 12px var(--glow)}
-#prev-btn{right:60px}#next-btn{right:20px}
+  position:fixed;bottom:16px;z-index:200;
+  background:rgba(14,14,16,.85);border:1.5px solid rgba(91,222,227,.35);color:var(--teal);
+  width:46px;height:46px;border-radius:50%;cursor:pointer;
+  font-size:20px;display:flex;align-items:center;justify-content:center;
+  transition:all .25s ease;backdrop-filter:blur(8px);
+  box-shadow:0 0 16px rgba(91,222,227,.12)}
+.nav-btn:hover{border-color:var(--teal);color:var(--white);
+  box-shadow:0 0 24px rgba(91,222,227,.45),0 0 0 3px rgba(91,222,227,.1)}
+#prev-btn{right:72px}#next-btn{right:18px}
+/* ── SCROLL CHEVRON ──────────────────────────────────────────────── */
+#scroll-hint{
+  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
+  z-index:200;display:flex;flex-direction:column;align-items:center;gap:4px;
+  opacity:.55;transition:opacity .4s ease;pointer-events:none}
+#scroll-hint.hidden{opacity:0}
+#scroll-hint span{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;
+  color:var(--teal);text-transform:uppercase}
+#scroll-chevron{
+  font-size:22px;color:var(--teal);
+  animation:bounce-down 1.8s ease-in-out infinite}
+@keyframes bounce-down{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(6px)}}
 /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
 .s-tag{
   font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;
@@ -120,6 +136,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   background:rgba(91,222,227,.04);border-radius:0 8px 8px 0;
   font-style:italic;font-size:13px;color:var(--teal);line-height:1.7;
   margin:16px 0;max-width:700px;text-align:left}
+.pull-quote-center{
+  border-left:none;border-top:1px solid rgba(91,222,227,.3);
+  border-bottom:1px solid rgba(91,222,227,.3);border-radius:0;
+  text-align:center;font-size:17px;font-style:italic;padding:28px 40px;
+  margin:16px auto;max-width:720px;background:rgba(91,222,227,.05);
+  color:var(--teal);line-height:1.75}
 /* ── BULLET LIST ────────────────────────────────────────────────── */
 .bullet-list{list-style:none;text-align:left;width:100%;max-width:660px}
 .bullet-list li{
@@ -148,7 +170,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   position:relative;width:360px;height:360px;margin:-20px auto 0;
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cover-wordmark{
-  font-size:56px;font-weight:900;color:var(--white);letter-spacing:-.04em;
+  font-size:56px;font-weight:200;color:var(--white);letter-spacing:-2px;
   text-align:center;position:relative;z-index:2;
   text-shadow:0 0 40px rgba(91,222,227,.3)}
 .cover-tagline{
@@ -263,7 +285,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   .grid-23{grid-template-columns:repeat(2,1fr)}
   .process-wrap{flex-direction:column}
   .process-arrow{display:none}
+  /* Slide 1 — center lone 3rd stat card */
+  #s0 .grid3{grid-template-columns:repeat(2,1fr)}
+  #s0 .grid3 .stat-card:last-child{grid-column:1/-1;max-width:220px;margin:0 auto}
+  /* Slide 4 — bilingual line spacing */
+  #s3 p[style*="English"]{margin-top:32px}
+  /* Slide 5 — center brains orbital */
+  #s4 .brains-orbital{margin:0 auto}
+  #s4>div[style*="display:flex"]{justify-content:center}
+  /* Slide 9 — min spacing between sections */
+  #s8 .card{margin-bottom:20px}
+  #s8 .gap16{height:20px}
   .brains-orbital{width:220px;height:220px}
+  .pull-quote-center{font-size:14px;padding:20px 20px}
+  .nav-btn{width:40px;height:40px;font-size:18px}
+  #scroll-hint{bottom:80px}
 }
 </style>
 </head>
@@ -280,7 +316,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <div class="s-tag">ORACLE · Business Growth Intelligence</div>
   <div class="cover-ring-wrap" id="cover-ring-wrap">
     <!-- Three.js torus renders on canvas behind this -->
-    <div class="cover-wordmark">NUHAI</div>
+    <div class="cover-wordmark">NUHA<span class="tc">I</span></div>
   </div>
   <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
   <p class="cover-subtitle">AI Marketing System &amp; Business Growth Intelligence</p>
@@ -375,7 +411,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
   </div>
   <div class="gap16"></div>
-  <div class="pull-quote">"NUHAI is not simple automation. It is an autonomous AI marketing brain that grows, compounding intelligence with every client, every campaign, and every data point."</div>
+  <div class="pull-quote pull-quote-center">"NUHAI is not simple automation. It is an autonomous AI marketing brain that grows, compounding intelligence with every client, every campaign, and every data point."</div>
   <div class="gap16"></div>
   <div class="grid4" style="max-width:640px;margin:0 auto">
     <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">AI-Native</span></div>
@@ -410,14 +446,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div style="flex:1;min-width:260px;max-width:360px">
       <p style="font-size:11px;font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:.04em">KEY CAPABILITIES</p>
       <ul class="bullet-list" style="font-size:11.5px">
-        <li><div><strong>Compounding Intelligence</strong> — Every client interaction makes the system smarter</div></li>
-        <li><div><strong>Cultural Intelligence</strong> — Built-in understanding of Gulf cultural rhythms</div></li>
-        <li><div><strong>Revenue Prediction</strong> — Documented predictions with confidence scores</div></li>
-        <li><div><strong>WhatsApp Native</strong> — Dedicated agents for the Gulf's primary channel</div></li>
-        <li><div><strong>Self-Learning</strong> — 4-level autonomy system, compounding over time</div></li>
-        <li><div><strong>Competitor Data Walls</strong> — Each client's intelligence is fully isolated</div></li>
-        <li><div><strong>Real-Time Optimization</strong> — Underperformers cut, winners scaled instantly</div></li>
-        <li><div><strong>Competitor Mapping</strong> — Live tracking of moves across the Gulf</div></li>
+        <li><div><strong>Compounding Intelligence</strong><span class="tc"> · </span>Every client interaction makes the system smarter</div></li>
+        <li><div><strong>Cultural Intelligence</strong><span class="tc"> · </span>Built-in understanding of Gulf cultural rhythms</div></li>
+        <li><div><strong>Revenue Prediction</strong><span class="tc"> · </span>Documented predictions with confidence scores</div></li>
+        <li><div><strong>WhatsApp Native</strong><span class="tc"> · </span>Dedicated agents for the Gulf's primary channel</div></li>
+        <li><div><strong>Self-Learning</strong><span class="tc"> · </span>4-level autonomy system, compounding over time</div></li>
+        <li><div><strong>Competitor Data Walls</strong><span class="tc"> · </span>Each client's intelligence is fully isolated</div></li>
+        <li><div><strong>Real-Time Optimization</strong><span class="tc"> · </span>Underperformers cut, winners scaled instantly</div></li>
+        <li><div><strong>Competitor Mapping</strong><span class="tc"> · </span>Live tracking of moves across the Gulf</div></li>
       </ul>
     </div>
   </div>
@@ -598,9 +634,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <div class="gap12"></div>
   <p class="s-sub">"We don't just plan your growth. We engineer it."</p>
   <div class="pricing-block">
-    <span class="pricing-label">INVESTMENT</span>
-    <span class="pricing-amount">Starting from AED 8,000 / month</span>
-    <span class="pricing-note">Performance-fee model available. Our growth is tied to yours.</span>
+    <span class="pricing-label">INVESTMENT MODEL</span>
+    <span class="pricing-amount" style="font-size:16px;font-weight:500;color:var(--teal)">Performance-fee model available</span>
+    <span class="pricing-note">Aligned incentives, transparent outcomes.</span>
   </div>
   <div class="gap16"></div>
   <a href="mailto:info@nuhai.net" class="cta-btn glow-btn">
@@ -624,6 +660,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 <div id="slide-info"><span id="si-num">01</span> / 12 &nbsp;&nbsp; <span id="si-title"></span></div>
 <button class="nav-btn" id="prev-btn">&#8592;</button>
 <button class="nav-btn" id="next-btn">&#8594;</button>
+<div id="scroll-hint">
+  <span>scroll</span>
+  <div id="scroll-chevron">&#8595;</div>
+</div>
 
 <script>
 // ─── Three.js Setup ───────────────────────────────────────────────
@@ -840,6 +880,17 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+// Scroll hint — hide after first navigation
+const scrollHint = document.getElementById('scroll-hint');
+let hintDismissed = false;
+function dismissHint(){
+  if(!hintDismissed){ hintDismissed=true; scrollHint.classList.add('hidden'); }
+}
+document.getElementById('prev-btn').addEventListener('click', dismissHint);
+document.getElementById('next-btn').addEventListener('click', dismissHint);
+document.addEventListener('keydown', dismissHint);
+document.addEventListener('touchend', dismissHint);
 
 // Init
 updateUI();
