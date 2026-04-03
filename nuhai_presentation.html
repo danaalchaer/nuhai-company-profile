@@ -187,71 +187,58 @@ body{
   position:relative;width:360px;height:360px;margin:-10px auto 0;
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 /* ── WORDMARK ───────────────────────────────────────────────────── */
-/* Shared wordmark font base — used for hero and nav sizes */
-.nuhai-wordmark,.nuhai-wordmark-nav{
-  font-family:'Nunito',sans-serif;
+/* ── NUHAI WORDMARK ──────────────────────────────────────────────── */
+/* nuh (grey) + aı (teal, dotless i with teal dot) + ı (teal stem, grey dot) */
+.nuhai-wordmark{
+  font-family:'Comfortaa',sans-serif;
   font-weight:300;
-  letter-spacing:3px;
-  line-height:1;
-  display:inline-flex;
-  align-items:baseline;
-  position:relative;
+  font-size:80px;
+  letter-spacing:4px;
+  color:#888884; /* default = grey for "nuh" */
+  display:inline-block;
+  line-height:1.2;
   user-select:none;
 }
-/* Hero (Slide 1) */
-.nuhai-wordmark{ font-size:80px; }
-/* Nav bar (fixed top-left) */
-.nuhai-wordmark-nav{ font-size:18px; letter-spacing:2px; }
-
-/* "nuh" — muted grey matching logo */
-.nuh{ color:#888884; }
-/* "a" — teal */
-.ai-letters{ color:#5BDEE3; }
-/* "i" — teal, dotless character + single teal dot via ::before */
-.i-special{
+/* Nav version */
+.nuhai-wordmark-nav{
+  font-family:'Comfortaa',sans-serif;
+  font-weight:300;
+  font-size:20px;
+  letter-spacing:2px;
+  color:#888884;
+  display:inline-block;
+  line-height:1.2;
+  user-select:none;
+}
+/* "aı" portion — teal, dotless ı gets a teal dot via ::after */
+.nuhai-wordmark .teal,.nuhai-wordmark-nav .teal{
   color:#5BDEE3;
   position:relative;
-  display:inline-block;
 }
-/* Use dotless ı (U+0131) so we control the dot entirely */
-.i-special::before{
+.nuhai-wordmark .teal::after,.nuhai-wordmark-nav .teal::after{
   content:'';
   position:absolute;
-  top:0.06em;
+  top:0.08em;
+  right:-0.01em;
+  width:0.12em;
+  height:0.12em;
+  background:#5BDEE3;
+  border-radius:50%;
+  box-shadow:0 0 6px rgba(91,222,227,0.7);
+}
+/* Last dotless ı — teal stem, grey dot via ::after */
+.nuhai-wordmark .teal-i-grey-dot,.nuhai-wordmark-nav .teal-i-grey-dot{
+  color:#5BDEE3;
+  position:relative;
+}
+.nuhai-wordmark .teal-i-grey-dot::after,.nuhai-wordmark-nav .teal-i-grey-dot::after{
+  content:'';
+  position:absolute;
+  top:0.08em;
   left:50%;
   transform:translateX(-50%);
-  width:0.13em;
-  height:0.13em;
-  background:#5BDEE3;
-  border-radius:50%;
-  box-shadow:0 0 8px rgba(91,222,227,0.7);
-}
-/* Last "i" — two dots: teal (left) + grey (right) */
-.i-double{
-  color:#5BDEE3;
-  position:relative;
-  display:inline-block;
-}
-.i-double::before{
-  content:'';
-  position:absolute;
-  top:0.06em;
-  left:30%;
-  transform:translateX(-50%);
-  width:0.13em;
-  height:0.13em;
-  background:#5BDEE3;
-  border-radius:50%;
-  box-shadow:0 0 8px rgba(91,222,227,0.7);
-}
-.i-double::after{
-  content:'';
-  position:absolute;
-  top:0.06em;
-  left:70%;
-  transform:translateX(-50%);
-  width:0.13em;
-  height:0.13em;
+  width:0.12em;
+  height:0.12em;
   background:#888884;
   border-radius:50%;
 }
@@ -387,8 +374,17 @@ body{
   }
 
   /* ── Wordmark ── */
-  .nuhai-wordmark{font-size:52px;letter-spacing:2px}
-  .nuhai-wordmark-nav{font-size:15px;letter-spacing:1.5px}
+  .nuhai-wordmark{font-size:48px;letter-spacing:2px}
+  .nuhai-wordmark-nav{font-size:16px;letter-spacing:1.5px}
+
+  /* ── FIX 2: Mobile section overflow ── */
+  section{
+    padding:30px 16px !important;
+    min-height:unset !important;
+    height:auto !important;
+    overflow-x:hidden !important;
+    box-sizing:border-box;
+  }
 
   /* ── Cover ring: shrink + make pseudo-element dots scale correctly ── */
   .cover-ring-wrap{width:220px;height:220px;margin-top:0}
@@ -453,7 +449,7 @@ body{
 }
 
 @media(max-width:480px){
-  .nuhai-wordmark{font-size:40px;letter-spacing:1.5px}
+  .nuhai-wordmark{font-size:36px;letter-spacing:1.5px}
   .cover-ring-wrap{width:180px;height:180px}
 
   /* Extra scale-down for orbital on very small screens */
@@ -473,7 +469,7 @@ body{
 <canvas id="bg-canvas"></canvas>
 <!-- Nav wordmark — always visible, text-based so no image load dependency -->
 <div id="nav-wm" aria-label="nuhai">
-  <div class="nuhai-wordmark-nav"><span class="nuh">nuh</span><span class="ai-letters">a</span><span class="i-special">&#305;</span><span class="i-double">&#305;</span></div>
+  <div class="nuhai-wordmark-nav">nuh<span class="teal">a&#305;</span><span class="teal-i-grey-dot">&#305;</span></div>
 </div>
 <!-- Logo image fallback (hidden if nav-wm is present) -->
 <img id="logo" src="https://www.nuhai.net/images/nuhai-logo.png" alt=""
@@ -485,7 +481,7 @@ body{
 <section class="slide" id="s0">
   <div class="s-tag">ORACLE · Business Growth Intelligence</div>
   <div class="cover-ring-wrap" id="cover-ring-wrap">
-    <div class="nuhai-wordmark"><span class="nuh">nuh</span><span class="ai-letters">a</span><span class="i-special">&#305;</span><span class="i-double">&#305;</span></div>
+    <div class="nuhai-wordmark">nuh<span class="teal">a&#305;</span><span class="teal-i-grey-dot">&#305;</span></div>
   </div>
   <div class="gap20"></div>
   <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
