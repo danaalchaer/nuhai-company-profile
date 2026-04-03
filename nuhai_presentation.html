@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NUHAI — Company Profile 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&family=Comfortaa:wght@300&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -26,9 +26,13 @@ body{
 }
 /* ── CANVAS ─────────────────────────────────────────────────────── */
 #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-/* ── LOGO ───────────────────────────────────────────────────────── */
-#logo{position:fixed;top:18px;left:28px;height:24px;width:auto;z-index:200;
-  filter:drop-shadow(0 0 6px rgba(91,222,227,0.4))}
+/* ── NAV WORDMARK ────────────────────────────────────────────────── */
+#nav-wm{
+  position:fixed;top:16px;left:24px;z-index:200;
+  filter:drop-shadow(0 0 6px rgba(91,222,227,0.25));
+  cursor:default;
+}
+#logo{display:none} /* replaced by text wordmark */
 /* ── SLIDE WRAPPER ──────────────────────────────────────────────── */
 #slides-wrap{position:relative;z-index:10}
 /* ── SLIDES ─────────────────────────────────────────────────────── */
@@ -183,20 +187,74 @@ body{
   position:relative;width:360px;height:360px;margin:-10px auto 0;
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 /* ── WORDMARK ───────────────────────────────────────────────────── */
-.cover-wordmark{
-  font-family:'Comfortaa',cursive;
-  font-size:80px;
+/* Shared wordmark font base — used for hero and nav sizes */
+.nuhai-wordmark,.nuhai-wordmark-nav{
+  font-family:'Nunito',sans-serif;
   font-weight:300;
-  letter-spacing:4px;
-  text-align:center;
-  position:relative;
-  z-index:2;
+  letter-spacing:3px;
   line-height:1;
+  display:inline-flex;
+  align-items:baseline;
+  position:relative;
   user-select:none;
 }
-/* "nuh" in muted grey, "aï" in teal — ï (U+00EF) gives double-dot naturally */
-.logo-grey{ color:#888884; }
-.logo-teal{ color:#5BDEE3; text-shadow:0 0 20px rgba(91,222,227,0.35); }
+/* Hero (Slide 1) */
+.nuhai-wordmark{ font-size:80px; }
+/* Nav bar (fixed top-left) */
+.nuhai-wordmark-nav{ font-size:18px; letter-spacing:2px; }
+
+/* "nuh" — muted grey matching logo */
+.nuh{ color:#888884; }
+/* "a" — teal */
+.ai-letters{ color:#5BDEE3; }
+/* "i" — teal, dotless character + single teal dot via ::before */
+.i-special{
+  color:#5BDEE3;
+  position:relative;
+  display:inline-block;
+}
+/* Use dotless ı (U+0131) so we control the dot entirely */
+.i-special::before{
+  content:'';
+  position:absolute;
+  top:0.06em;
+  left:50%;
+  transform:translateX(-50%);
+  width:0.13em;
+  height:0.13em;
+  background:#5BDEE3;
+  border-radius:50%;
+  box-shadow:0 0 8px rgba(91,222,227,0.7);
+}
+/* Last "i" — two dots: teal (left) + grey (right) */
+.i-double{
+  color:#5BDEE3;
+  position:relative;
+  display:inline-block;
+}
+.i-double::before{
+  content:'';
+  position:absolute;
+  top:0.06em;
+  left:30%;
+  transform:translateX(-50%);
+  width:0.13em;
+  height:0.13em;
+  background:#5BDEE3;
+  border-radius:50%;
+  box-shadow:0 0 8px rgba(91,222,227,0.7);
+}
+.i-double::after{
+  content:'';
+  position:absolute;
+  top:0.06em;
+  left:70%;
+  transform:translateX(-50%);
+  width:0.13em;
+  height:0.13em;
+  background:#888884;
+  border-radius:50%;
+}
 .cover-tagline{
   font-size:13px;color:var(--muted);text-align:center;margin:0;
   letter-spacing:.01em;max-width:500px}
@@ -328,13 +386,13 @@ body{
     justify-content:flex-start;
   }
 
-  /* ── Wordmark — maintain split colors at mobile size ── */
-  .cover-wordmark{font-size:52px;letter-spacing:2px}
-  .logo-grey{color:#888884}
-  .logo-teal{color:#5BDEE3}
+  /* ── Wordmark ── */
+  .nuhai-wordmark{font-size:52px;letter-spacing:2px}
+  .nuhai-wordmark-nav{font-size:15px;letter-spacing:1.5px}
 
-  /* ── Cover ring: shrink so it doesn't eat vertical space ── */
+  /* ── Cover ring: shrink + make pseudo-element dots scale correctly ── */
   .cover-ring-wrap{width:220px;height:220px;margin-top:0}
+  /* Dot pseudo-elements scale with font-size automatically */
 
   /* ── All multi-column grids → single column ── */
   .grid2,.grid3,.grid4,.grid-23{
@@ -395,7 +453,7 @@ body{
 }
 
 @media(max-width:480px){
-  .cover-wordmark{font-size:42px;letter-spacing:2px}
+  .nuhai-wordmark{font-size:40px;letter-spacing:1.5px}
   .cover-ring-wrap{width:180px;height:180px}
 
   /* Extra scale-down for orbital on very small screens */
@@ -413,8 +471,13 @@ body{
 <body>
 
 <canvas id="bg-canvas"></canvas>
-<img id="logo" src="https://www.nuhai.net/images/nuhai-logo.png" alt="NUHAI"
-     onerror="this.style.display='none'">
+<!-- Nav wordmark — always visible, text-based so no image load dependency -->
+<div id="nav-wm" aria-label="nuhai">
+  <div class="nuhai-wordmark-nav"><span class="nuh">nuh</span><span class="ai-letters">a</span><span class="i-special">&#305;</span><span class="i-double">&#305;</span></div>
+</div>
+<!-- Logo image fallback (hidden if nav-wm is present) -->
+<img id="logo" src="https://www.nuhai.net/images/nuhai-logo.png" alt=""
+     style="display:none" aria-hidden="true">
 
 <div id="slides-wrap">
 
@@ -422,7 +485,7 @@ body{
 <section class="slide" id="s0">
   <div class="s-tag">ORACLE · Business Growth Intelligence</div>
   <div class="cover-ring-wrap" id="cover-ring-wrap">
-    <div class="cover-wordmark"><span class="logo-grey">nuh</span><span class="logo-teal">a&#239;</span></div>
+    <div class="nuhai-wordmark"><span class="nuh">nuh</span><span class="ai-letters">a</span><span class="i-special">&#305;</span><span class="i-double">&#305;</span></div>
   </div>
   <div class="gap20"></div>
   <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
