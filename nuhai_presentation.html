@@ -373,9 +373,8 @@ body{
     justify-content:flex-start;
   }
 
-  /* ── Wordmark ── */
-  .nuhai-wordmark{font-size:48px;letter-spacing:2px}
-  .nuhai-wordmark-nav{font-size:16px;letter-spacing:1.5px}
+  /* ── Hero logo mobile size ── */
+  .hero-logo{height:52px !important;width:auto !important;}
 
   /* ── FIX 2: Mobile section overflow ── */
   section{
@@ -467,13 +466,9 @@ body{
 <body>
 
 <canvas id="bg-canvas"></canvas>
-<!-- Nav wordmark — always visible, text-based so no image load dependency -->
-<div id="nav-wm" aria-label="nuhai">
-  <div class="nuhai-wordmark-nav">nuh<span class="teal">a&#305;</span><span class="teal-i-grey-dot">&#305;</span></div>
+<div id="nav-wm">
+  <img src="https://www.nuhai.net/images/nuhai-logo.png" alt="NUHAI" style="height:33px; width:94px; object-fit:contain;" />
 </div>
-<!-- Logo image fallback (hidden if nav-wm is present) -->
-<img id="logo" src="https://www.nuhai.net/images/nuhai-logo.png" alt=""
-     style="display:none" aria-hidden="true">
 
 <div id="slides-wrap">
 
@@ -481,7 +476,7 @@ body{
 <section class="slide" id="s0">
   <div class="s-tag">ORACLE · Business Growth Intelligence</div>
   <div class="cover-ring-wrap" id="cover-ring-wrap">
-    <div class="nuhai-wordmark">nuh<span class="teal">a&#305;</span><span class="teal-i-grey-dot">&#305;</span></div>
+    <img src="https://www.nuhai.net/images/nuhai-logo.png" alt="NUHAI" class="hero-logo" style="height:80px; width:auto; object-fit:contain;" />
   </div>
   <div class="gap20"></div>
   <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
