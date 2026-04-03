@@ -187,32 +187,16 @@ body{
   font-family:'Comfortaa',cursive;
   font-size:80px;
   font-weight:300;
-  color:#E0E0E0;
-  letter-spacing:3px;
+  letter-spacing:4px;
   text-align:center;
   position:relative;
   z-index:2;
   line-height:1;
   user-select:none;
 }
-/* dotless i wrapper — places a teal dot above via ::before */
-.wm-i{
-  position:relative;
-  display:inline-block;
-  color:#E0E0E0;
-}
-.wm-i::before{
-  content:'';
-  position:absolute;
-  top:-0.10em;
-  left:50%;
-  transform:translateX(-50%);
-  width:0.13em;
-  height:0.13em;
-  background:#5BDEE3;
-  border-radius:50%;
-  box-shadow:0 0 8px rgba(91,222,227,0.8),0 0 16px rgba(91,222,227,0.4);
-}
+/* "nuh" in muted grey, "aï" in teal — ï (U+00EF) gives double-dot naturally */
+.logo-grey{ color:#888884; }
+.logo-teal{ color:#5BDEE3; text-shadow:0 0 20px rgba(91,222,227,0.35); }
 .cover-tagline{
   font-size:13px;color:var(--muted);text-align:center;margin:0;
   letter-spacing:.01em;max-width:500px}
@@ -328,58 +312,101 @@ body{
 .gap32{height:32px;flex-shrink:0}.gap40{height:40px;flex-shrink:0}
 /* ── RESPONSIVE ─────────────────────────────────────────────────── */
 @media(max-width:768px){
-  .slide{padding:80px 20px 70px}
-  #s4,#s8{padding:80px 20px 70px}
-  .grid3,.grid4{grid-template-columns:repeat(2,1fr)}
-  .grid-23{grid-template-columns:repeat(2,1fr)}
-  .process-wrap{flex-direction:column}
-  .process-arrow{display:none}
-  /* Wordmark mobile */
+  /* ── Global mobile reset ── */
+  *{max-width:100%;box-sizing:border-box}
+
+  /* ── Sections: cut padding, let height be natural ── */
+  .slide{
+    padding:56px 18px 56px !important;
+    min-height:unset !important;
+    height:auto !important;
+    overflow:visible !important;
+    width:100%;
+  }
+  #s4,#s8{
+    padding:56px 18px 56px !important;
+    justify-content:flex-start;
+  }
+
+  /* ── Wordmark — maintain split colors at mobile size ── */
   .cover-wordmark{font-size:52px;letter-spacing:2px}
-  /* Slide 1 — center 3rd stat card */
-  #s0 .grid3{grid-template-columns:repeat(2,1fr)}
-  #s0 .grid3 .stat-card:last-child{grid-column:1/-1;max-width:220px;margin:0 auto}
-  /* Slide 5 — brains orbital: scale down and center */
-  #s4 .brains-orbital{
+  .logo-grey{color:#888884}
+  .logo-teal{color:#5BDEE3}
+
+  /* ── Cover ring: shrink so it doesn't eat vertical space ── */
+  .cover-ring-wrap{width:220px;height:220px;margin-top:0}
+
+  /* ── All multi-column grids → single column ── */
+  .grid2,.grid3,.grid4,.grid-23{
+    grid-template-columns:1fr !important;
+    gap:12px;
+    width:100%;
+  }
+
+  /* ── Slide 1: keep stat cards in 2-col, center the lone 3rd ── */
+  #s0 .grid3{grid-template-columns:repeat(2,1fr) !important}
+  #s0 .grid3 .stat-card:last-child{
+    grid-column:1/-1;max-width:220px;margin:0 auto
+  }
+
+  /* ── Slide 2: TOC items — full width ── */
+  .toc-item{padding:10px 12px}
+
+  /* ── Pull quotes ── */
+  .pull-quote-center{font-size:14px;padding:20px 16px}
+  .pull-quote{font-size:12px;padding:12px 14px}
+
+  /* ── Slide 5 — ORACLE: stack orbital above caps list ── */
+  #s4 .oracle-flex{flex-direction:column;align-items:center;gap:24px}
+  #s4 .oracle-caps{min-width:unset;max-width:100%;width:100%}
+  .brains-orbital-wrap{
+    display:flex;justify-content:center;align-items:center;
+    width:100%;height:202px;  /* 280 × 0.72 — reserves correct space */
+  }
+  .brains-orbital{
     transform:scale(0.72);
     transform-origin:center center;
-    margin:0 auto;
-    display:block;
+    margin:0 auto;display:block;
+    /* Override any stray margin-left from inspector */
+    margin-left:auto !important;margin-right:auto !important;
   }
-  #s4 .brains-orbital-wrap{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    width:100%;
-    /* compensate for scale reduction so it doesn't collapse surrounding space */
-    height:calc(280px * 0.72);
-  }
-  /* Stack orbital above capabilities list on mobile */
-  #s4 .oracle-flex{
-    flex-direction:column;
-    align-items:center;
-  }
-  #s4 .oracle-caps{
-    min-width:unset;
-    max-width:100%;
-    width:100%;
-  }
-  /* Pull quote */
-  .pull-quote-center{font-size:15px;padding:24px 20px}
-  /* Nav */
+
+  /* ── Slide 7: process steps stack vertically ── */
+  .process-wrap{flex-direction:column;gap:12px}
+  .process-arrow{display:none}
+
+  /* ── Slide 9 (Why NUHAI): table scrollable, cards single col ── */
+  #s8 .comp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%}
+  #s8 .comp-table{font-size:10px;min-width:480px}
+  #s8 .grid3{grid-template-columns:1fr !important;gap:12px;margin-top:16px}
+
+  /* ── Slide 4 (About): bilingual gap ── */
+  #s3 .bilingual{margin-top:32px}
+
+  /* ── Contact card ── */
+  .contact-card{padding:16px 14px}
+  .contact-row{flex-direction:column;gap:4px}
+  .contact-lbl{width:auto}
+
+  /* ── Nav ── */
   .nav-btn{width:42px;height:42px;font-size:18px}
   #prev-btn{right:60px}
-  /* Comp table */
-  #s8 .comp-table{font-size:10px}
-  /* Slide 9 stacking */
-  #s8 .grid3{gap:12px;margin-top:16px}
+  #nav-dots{right:8px}
 }
+
 @media(max-width:480px){
-  .cover-wordmark{font-size:44px;letter-spacing:2px}
-  /* Do NOT resize .brains-orbital here — node positions are JS-computed for 280px.
-     Instead, scale further down so nothing clips on very small screens. */
-  #s4 .brains-orbital{transform:scale(0.62);transform-origin:center center}
-  #s4 .brains-orbital-wrap{height:calc(280px * 0.62)}
+  .cover-wordmark{font-size:42px;letter-spacing:2px}
+  .cover-ring-wrap{width:180px;height:180px}
+
+  /* Extra scale-down for orbital on very small screens */
+  .brains-orbital{transform:scale(0.60);transform-origin:center center}
+  .brains-orbital-wrap{height:168px} /* 280 × 0.60 */
+
+  /* Stack exec-summary stat cards 2×2 → 1-col */
+  #s2 .grid4{grid-template-columns:repeat(2,1fr) !important}
+
+  /* Slide 12 CTA button — full width */
+  .cta-btn{width:100%;justify-content:center;padding:14px 20px}
 }
 </style>
 </head>
@@ -395,7 +422,7 @@ body{
 <section class="slide" id="s0">
   <div class="s-tag">ORACLE · Business Growth Intelligence</div>
   <div class="cover-ring-wrap" id="cover-ring-wrap">
-    <div class="cover-wordmark">nuha<span class="wm-i">ı</span></div>
+    <div class="cover-wordmark"><span class="logo-grey">nuh</span><span class="logo-teal">a&#239;</span></div>
   </div>
   <div class="gap20"></div>
   <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
@@ -504,7 +531,7 @@ body{
     <div class="card" style="text-align:center;padding:14px 8px"><span style="font-size:11px;font-weight:700;color:var(--white)">Growth-Obsessed</span></div>
   </div>
   <div class="gap32"></div>
-  <p style="font-size:11px;color:var(--muted);text-align:center">English &nbsp;·&nbsp; &#1593;&#1585;&#1576;&#1610;</p>
+  <p class="bilingual" style="font-size:11px;color:var(--muted);text-align:center">English &nbsp;·&nbsp; &#1593;&#1585;&#1576;&#1610;</p>
   <div class="slide-chevron">&#8595;</div>
 </section>
 
@@ -651,7 +678,7 @@ body{
   <div class="s-tag">07 · WHY NUHAI</div>
   <div class="s-h2">A New Category of <span class="tc">Growth</span></div>
   <div class="gap20"></div>
-  <div style="width:100%;overflow-x:auto;max-width:860px">
+  <div class="comp-table-wrap" style="width:100%;overflow-x:auto;max-width:860px">
     <table class="comp-table">
       <thead>
         <tr>
