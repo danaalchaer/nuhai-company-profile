@@ -384,10 +384,9 @@ body{
   .contact-row{flex-direction:column;gap:4px}
   .contact-lbl{width:auto}
 
-  /* ── Nav ── */
+  /* ── Nav: hide on mobile, page scrolls normally ── */
+  #prev-btn, #next-btn, #nav-dots { display:none !important; }
   .nav-btn{width:42px;height:42px;font-size:18px}
-  #prev-btn{right:60px}
-  #nav-dots{right:8px}
 }
 
 @media(max-width:480px){
@@ -942,20 +941,22 @@ slides.forEach(s => observer.observe(s));
 document.getElementById('prev-btn').addEventListener('click', () => scrollToSlide(cur - 1));
 document.getElementById('next-btn').addEventListener('click', () => scrollToSlide(cur + 1));
 
-// Keyboard navigation
+// Keyboard navigation (desktop only)
 document.addEventListener('keydown', e => {
+  if (window.innerWidth <= 768) return;
   if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); scrollToSlide(cur + 1); }
   if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  { e.preventDefault(); scrollToSlide(cur - 1); }
 });
 
-// Touch / swipe (vertical)
+// Touch / swipe (desktop only — mobile scrolls naturally)
 let tY = 0, tLocked = false;
 document.addEventListener('touchstart', e => {
+  if (window.innerWidth <= 768) return;
   tY = e.touches[0].clientY;
   tLocked = false;
 }, { passive: true });
 document.addEventListener('touchend', e => {
-  if (tLocked) return;
+  if (window.innerWidth <= 768 || tLocked) return;
   const dy = tY - e.changedTouches[0].clientY;
   if (Math.abs(dy) > 60) {
     tLocked = true;
