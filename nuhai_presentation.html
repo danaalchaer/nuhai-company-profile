@@ -32,7 +32,6 @@ body{
   filter:drop-shadow(0 0 6px rgba(91,222,227,0.25));
   cursor:default;
 }
-#logo{display:none} /* replaced by text wordmark */
 /* ── SLIDE WRAPPER ──────────────────────────────────────────────── */
 #slides-wrap{position:relative;z-index:10}
 /* ── SLIDES ─────────────────────────────────────────────────────── */
@@ -186,62 +185,6 @@ body{
 .cover-ring-wrap{
   position:relative;width:360px;height:360px;margin:-10px auto 0;
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
-/* ── WORDMARK ───────────────────────────────────────────────────── */
-/* ── NUHAI WORDMARK ──────────────────────────────────────────────── */
-/* nuh (grey) + aı (teal, dotless i with teal dot) + ı (teal stem, grey dot) */
-.nuhai-wordmark{
-  font-family:'Comfortaa',sans-serif;
-  font-weight:300;
-  font-size:80px;
-  letter-spacing:4px;
-  color:#888884; /* default = grey for "nuh" */
-  display:inline-block;
-  line-height:1.2;
-  user-select:none;
-}
-/* Nav version */
-.nuhai-wordmark-nav{
-  font-family:'Comfortaa',sans-serif;
-  font-weight:300;
-  font-size:20px;
-  letter-spacing:2px;
-  color:#888884;
-  display:inline-block;
-  line-height:1.2;
-  user-select:none;
-}
-/* "aı" portion — teal, dotless ı gets a teal dot via ::after */
-.nuhai-wordmark .teal,.nuhai-wordmark-nav .teal{
-  color:#5BDEE3;
-  position:relative;
-}
-.nuhai-wordmark .teal::after,.nuhai-wordmark-nav .teal::after{
-  content:'';
-  position:absolute;
-  top:0.08em;
-  right:-0.01em;
-  width:0.12em;
-  height:0.12em;
-  background:#5BDEE3;
-  border-radius:50%;
-  box-shadow:0 0 6px rgba(91,222,227,0.7);
-}
-/* Last dotless ı — teal stem, grey dot via ::after */
-.nuhai-wordmark .teal-i-grey-dot,.nuhai-wordmark-nav .teal-i-grey-dot{
-  color:#5BDEE3;
-  position:relative;
-}
-.nuhai-wordmark .teal-i-grey-dot::after,.nuhai-wordmark-nav .teal-i-grey-dot::after{
-  content:'';
-  position:absolute;
-  top:0.08em;
-  left:50%;
-  transform:translateX(-50%);
-  width:0.12em;
-  height:0.12em;
-  background:#888884;
-  border-radius:50%;
-}
 .cover-tagline{
   font-size:13px;color:var(--muted);text-align:center;margin:0;
   letter-spacing:.01em;max-width:500px}
@@ -374,7 +317,7 @@ body{
   }
 
   /* ── Hero logo mobile size ── */
-  .hero-logo{height:52px !important;width:auto !important;}
+  .hero-logo{height:48px !important;width:auto !important;}
 
   /* ── FIX 2: Mobile section overflow ── */
   section{
@@ -448,7 +391,6 @@ body{
 }
 
 @media(max-width:480px){
-  .nuhai-wordmark{font-size:36px;letter-spacing:1.5px}
   .cover-ring-wrap{width:180px;height:180px}
 
   /* Extra scale-down for orbital on very small screens */
@@ -467,7 +409,7 @@ body{
 
 <canvas id="bg-canvas"></canvas>
 <div id="nav-wm">
-  <img src="https://www.nuhai.net/images/nuhai-logo.png" alt="NUHAI" style="height:33px; width:94px; object-fit:contain;" />
+  <img src="nuhai-logo.png" alt="nuhai" style="height:33px; width:auto;" />
 </div>
 
 <div id="slides-wrap">
@@ -476,7 +418,7 @@ body{
 <section class="slide" id="s0">
   <div class="s-tag">ORACLE · Business Growth Intelligence</div>
   <div class="cover-ring-wrap" id="cover-ring-wrap">
-    <img src="https://www.nuhai.net/images/nuhai-logo.png" alt="NUHAI" class="hero-logo" style="height:80px; width:auto; object-fit:contain;" />
+    <img src="nuhai-logo.png" alt="nuhai" class="hero-logo" style="height:70px; width:auto;" />
   </div>
   <div class="gap20"></div>
   <p class="cover-tagline">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
