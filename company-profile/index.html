@@ -204,7 +204,9 @@ body{
 .toc-list{max-width:640px;margin:0 auto;list-style:none;padding:0}
 .toc-entry{display:flex;align-items:center;padding:16px 0;
   border-bottom:1px solid var(--border);text-decoration:none;cursor:pointer;
-  transition:all .2s ease}
+  border-radius:8px;padding-left:0;padding-right:0;transition:all .2s ease}
+.toc-entry:hover{background:rgba(91,222,227,.08);border-radius:8px;
+  padding-left:12px;padding-right:12px}
 .toc-entry:hover .toc-title{color:var(--teal)}
 .toc-entry:hover .toc-num{color:#A0F0F5}
 .toc-num{font-family:'Courier New',monospace;font-size:13px;color:var(--teal);
@@ -248,13 +250,15 @@ body{
   transform:translate(-50%,-50%);
   width:70px;height:70px;border-radius:50%;background:var(--card);
   border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:700;color:var(--teal);letter-spacing:.06em;
-  text-align:center;box-shadow:0 0 20px var(--glow),0 0 40px var(--glow2)}
+  font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.04em;
+  text-align:center;line-height:1.4;padding:8px;
+  box-shadow:0 0 20px var(--glow),0 0 40px var(--glow2)}
 .brain-node{
   position:absolute;width:76px;height:76px;border-radius:10px;
   background:var(--card);border:1px solid rgba(91,222,227,.3);
   display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:600;color:var(--white);letter-spacing:.03em;text-align:center;
+  font-size:11px;font-weight:600;color:var(--white);letter-spacing:.02em;
+  text-align:center;line-height:1.3;padding:6px;word-break:break-word;
   transition:all .3s ease}
 .brain-node:hover{border-color:var(--teal);color:var(--teal);
   box-shadow:0 0 16px var(--glow);transform:scale(1.08)}
@@ -412,7 +416,7 @@ body{
   /* ── Nav: hide on mobile, page scrolls normally ── */
   #prev-btn, #next-btn, #nav-dots { display:none !important; }
   .nav-btn{width:42px;height:42px;font-size:18px}
-  .brain-node{width:60px!important;height:60px!important;font-size:11px!important;}
+  .brain-node{width:60px!important;height:60px!important;font-size:10px!important;padding:4px!important;}
 }
 
 @media(max-width:480px){
@@ -508,8 +512,8 @@ body{
   <div style="position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.25;" id="about-globe-bg"></div>
   <div style="position:relative;z-index:10;width:100%;max-width:900px;display:flex;flex-direction:column;align-items:flex-start;">
     <div class="s-tag">ABOUT NUHAI</div>
-    <h1 class="s-h1" style="text-align:left;font-size:52px;letter-spacing:-1.5px;line-height:1.1;margin-bottom:8px;">Business Growth Intelligence.</h1>
-    <h1 class="s-h1" style="text-align:left;font-size:52px;letter-spacing:-1.5px;line-height:1.1;color:var(--teal);margin-bottom:28px;">Powered by AI.</h1>
+    <h1 class="s-h1" style="text-align:left;font-size:52px;letter-spacing:-1.5px;line-height:1.1;margin-bottom:8px;">The Gulf's First</h1>
+    <h1 class="s-h1" style="text-align:left;font-size:52px;letter-spacing:-1.5px;line-height:1.1;color:var(--teal);margin-bottom:28px;">AI Growth System.</h1>
     <p style="color:#888884;font-size:18px;line-height:1.75;margin-bottom:32px;max-width:640px;">An AI marketing system built in Dubai, engineered for the Gulf market.</p>
     <div style="width:60px;height:2px;background:var(--teal);margin-bottom:32px;"></div>
 
@@ -539,29 +543,6 @@ body{
   <div class="s-tag">01 · EXECUTIVE SUMMARY</div>
   <div class="s-h1">Business Growth Intelligence.<br><span class="tc">Powered by AI.</span></div>
   <p class="s-body">NUHAI is an AI-powered business growth intelligence system headquartered in Dubai, UAE. Purpose-built for the Gulf market, combining autonomous AI technology with deep cultural intelligence to deliver measurable, guaranteed revenue outcomes. At the core is ORACLE: 35 specialized AI agents working in parallel across 8 department brains.</p>
-  <div class="gap20"></div>
-  <div class="grid4" style="max-width:720px;margin:0 auto;width:100%">
-    <div class="stat-card float-a">
-      <span class="stat-num">8</span>
-      <span class="stat-lbl">Department Brains</span>
-      <span class="stat-sub">35+ Agents</span>
-    </div>
-    <div class="stat-card float-b">
-      <span class="stat-num">89%</span>
-      <span class="stat-lbl">Prediction Accuracy</span>
-      <span class="stat-sub">Gulf Campaigns</span>
-    </div>
-    <div class="stat-card float-c">
-      <span class="stat-num">24/7</span>
-      <span class="stat-lbl">Autonomous Operation</span>
-      <span class="stat-sub">No bottlenecks</span>
-    </div>
-    <div class="stat-card float-d">
-      <span class="stat-num">9</span>
-      <span class="stat-lbl">Cultural Profiles</span>
-      <span class="stat-sub">Gulf-Calibrated</span>
-    </div>
-  </div>
   <div class="slide-chevron">&#8595;</div>
 </section>
 
@@ -1073,6 +1054,16 @@ document.querySelectorAll('.toc-entry').forEach(entry => {
 
 // Make the first slide (cover) visible immediately on page load
 if (slides[0]) slides[0].classList.add('visible');
+
+// Fade out cover canvas as user scrolls away from it
+const bgCanvas = document.getElementById('bg-canvas');
+window.addEventListener('scroll', () => {
+  if (!bgCanvas) return;
+  const scrollY = window.scrollY;
+  const coverHeight = window.innerHeight;
+  const fadeProgress = Math.min(scrollY / (coverHeight * 0.6), 1);
+  bgCanvas.style.opacity = 1 - fadeProgress;
+}, { passive: true });
 
 // Prev / Next buttons
 document.getElementById('prev-btn').addEventListener('click', () => scrollToSlide(cur - 1));
