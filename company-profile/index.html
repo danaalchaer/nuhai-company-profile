@@ -195,15 +195,25 @@ body{
   background:linear-gradient(90deg,transparent,var(--teal),transparent);
   margin:20px auto;box-shadow:0 0 12px var(--teal);opacity:.7;flex-shrink:0}
 /* ── TOC ────────────────────────────────────────────────────────── */
-.toc-item{
-  display:flex;align-items:center;gap:16px;padding:12px 20px;border-radius:8px;
-  border:1px solid transparent;cursor:default;
-  transition:border-color .3s ease,background .3s ease}
-.toc-item:hover{background:rgba(91,222,227,.04);border-color:rgba(91,222,227,.15)}
-.toc-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);
-  width:24px;flex-shrink:0}
-.toc-title{font-size:13.5px;font-weight:600;color:var(--white);flex:1}
-.toc-pg{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.toc-tag{font-family:'Courier New',monospace;font-size:11px;letter-spacing:4px;
+  color:var(--teal);text-transform:uppercase;display:block;margin-bottom:20px}
+.toc-heading{font-size:52px;font-weight:700;color:var(--white);letter-spacing:-1.5px;
+  margin-bottom:8px;display:inline}
+.toc-year{font-size:52px;font-weight:700;color:var(--teal);letter-spacing:-1.5px;margin-left:12px}
+.toc-divider{width:200px;height:1px;background:var(--teal);margin:32px auto;opacity:.5}
+.toc-list{max-width:640px;margin:0 auto;list-style:none;padding:0}
+.toc-entry{display:flex;align-items:center;padding:16px 0;
+  border-bottom:1px solid var(--border);text-decoration:none;cursor:pointer;
+  transition:all .2s ease}
+.toc-entry:hover .toc-title{color:var(--teal)}
+.toc-entry:hover .toc-num{color:#A0F0F5}
+.toc-num{font-family:'Courier New',monospace;font-size:13px;color:var(--teal);
+  font-weight:700;min-width:36px;text-align:left}
+.toc-title{font-size:16px;font-weight:600;color:var(--white);text-align:left;flex:1;
+  transition:color .2s ease}
+.toc-dots{flex:1;border-bottom:2px dotted #2A2A2A;margin:0 16px;height:1px;align-self:center}
+.toc-page{font-family:'Courier New',monospace;font-size:12px;color:var(--muted);
+  min-width:32px;text-align:right}
 /* ── MOBILE COMPARISON CARDS ────────────────────────────────────── */
 .comp-mobile-cards{display:none;}
 .comp-mobile-group{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0;margin-bottom:16px;overflow:hidden;}
@@ -356,8 +366,12 @@ body{
     grid-column:1/-1;max-width:220px;margin:0 auto
   }
 
-  /* ── Slide 2: TOC items — full width ── */
-  .toc-item{padding:10px 12px}
+  /* ── TOC mobile ── */
+  .toc-section{padding:60px 24px}
+  .toc-heading,.toc-year{font-size:36px}
+  .toc-title{font-size:14px}
+  .toc-dots{display:none}
+  .toc-entry{justify-content:space-between}
 
   /* ── Pull quotes ── */
   .pull-quote-center{font-size:14px;padding:20px 16px}
@@ -464,21 +478,27 @@ body{
   <div class="slide-chevron">&#8964;</div>
 </section>
 <!-- ════════════════ SLIDE 2 · TABLE OF CONTENTS ════════════════ -->
-<section class="slide" id="s1">
+<section class="slide" id="s1" style="padding:0;">
   <div class="persp-grid-bg"></div>
-  <div class="s-tag">CONTENTS</div>
-  <div class="s-h1">Company Profile <span class="tc">2026</span></div>
-  <div class="gap8"></div>
-    <div class="toc-item" onclick="scrollToSlide(3)" style="cursor:pointer"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-pg">p.03</span></div>
-    <div class="toc-item" onclick="scrollToSlide(4)" style="cursor:pointer"><span class="toc-num">02</span><span class="toc-title">About NUHAI</span><span class="toc-pg">p.04</span></div>
-    <div class="toc-item" onclick="scrollToSlide(5)" style="cursor:pointer"><span class="toc-num">03</span><span class="toc-title">The ORACLE AI System</span><span class="toc-pg">p.05</span></div>
-    <div class="toc-item" onclick="scrollToSlide(6)" style="cursor:pointer"><span class="toc-num">04</span><span class="toc-title">Products &amp; Services</span><span class="toc-pg">p.06</span></div>
-    <div class="toc-item" onclick="scrollToSlide(7)" style="cursor:pointer"><span class="toc-num">05</span><span class="toc-title">Our Process</span><span class="toc-pg">p.07</span></div>
-    <div class="toc-item" onclick="scrollToSlide(8)" style="cursor:pointer"><span class="toc-num">06</span><span class="toc-title">Core Values</span><span class="toc-pg">p.08</span></div>
-    <div class="toc-item" onclick="scrollToSlide(9)" style="cursor:pointer"><span class="toc-num">07</span><span class="toc-title">Why NUHAI</span><span class="toc-pg">p.09</span></div>
-    <div class="toc-item" onclick="scrollToSlide(10)" style="cursor:pointer"><span class="toc-num">08</span><span class="toc-title">NUHAI in Numbers</span><span class="toc-pg">p.10</span></div>
-    <div class="toc-item" onclick="scrollToSlide(11)" style="cursor:pointer"><span class="toc-num">09</span><span class="toc-title">Industries We Serve</span><span class="toc-pg">p.11</span></div>
-    <div class="toc-item" onclick="scrollToSlide(12)" style="cursor:pointer"><span class="toc-num">10</span><span class="toc-title">Get in Touch</span><span class="toc-pg">p.12</span></div>
+  <div class="toc-section">
+    <span class="toc-tag">Contents</span>
+    <div>
+      <span class="toc-heading">Company Profile</span>
+      <span class="toc-year">2026</span>
+    </div>
+    <div class="toc-divider"></div>
+    <ol class="toc-list">
+      <a href="#s2" class="toc-entry"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-dots"></span><span class="toc-page">p.03</span></a>
+      <a href="#s3" class="toc-entry"><span class="toc-num">02</span><span class="toc-title">About NUHAI</span><span class="toc-dots"></span><span class="toc-page">p.04</span></a>
+      <a href="#s4" class="toc-entry"><span class="toc-num">03</span><span class="toc-title">The ORACLE AI System</span><span class="toc-dots"></span><span class="toc-page">p.05</span></a>
+      <a href="#s5" class="toc-entry"><span class="toc-num">04</span><span class="toc-title">Products &amp; Services</span><span class="toc-dots"></span><span class="toc-page">p.06</span></a>
+      <a href="#s6" class="toc-entry"><span class="toc-num">05</span><span class="toc-title">Our Process</span><span class="toc-dots"></span><span class="toc-page">p.07</span></a>
+      <a href="#s7" class="toc-entry"><span class="toc-num">06</span><span class="toc-title">Core Values</span><span class="toc-dots"></span><span class="toc-page">p.08</span></a>
+      <a href="#s8" class="toc-entry"><span class="toc-num">07</span><span class="toc-title">Why NUHAI</span><span class="toc-dots"></span><span class="toc-page">p.09</span></a>
+      <a href="#s9" class="toc-entry"><span class="toc-num">08</span><span class="toc-title">NUHAI in Numbers</span><span class="toc-dots"></span><span class="toc-page">p.10</span></a>
+      <a href="#s10" class="toc-entry"><span class="toc-num">09</span><span class="toc-title">Industries We Serve</span><span class="toc-dots"></span><span class="toc-page">p.11</span></a>
+      <a href="#s11" class="toc-entry"><span class="toc-num">10</span><span class="toc-title">Get in Touch</span><span class="toc-dots"></span><span class="toc-page">p.12</span></a>
+    </ol>
   </div>
   <div class="slide-chevron">&#8595;</div>
 </section>
@@ -1041,6 +1061,15 @@ const oracleFadeObs = new IntersectionObserver((entries) => {
 }, {threshold: oracleThresholds});
 const oracleSec = document.getElementById('s4');
 if (oracleSec) oracleFadeObs.observe(oracleSec);
+
+// TOC smooth scroll on click
+document.querySelectorAll('.toc-entry').forEach(entry => {
+  entry.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(entry.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
 
 // Make the first slide (cover) visible immediately on page load
 if (slides[0]) slides[0].classList.add('visible');
