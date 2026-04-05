@@ -15,7 +15,7 @@
 }
 html{
   scroll-behavior:smooth;
-  overflow-y:scroll;
+  overflow-y:auto;
   height:auto;
   background:var(--bg);
 }
@@ -57,12 +57,9 @@ body{
   cursor:pointer;transition:all .3s ease;opacity:.5}
 .dot.active{background:var(--teal);transform:scale(1.5);opacity:1;
   box-shadow:0 0 8px var(--teal)}
-/* ── SLIDE INFO ─────────────────────────────────────────────────── */
-#slide-info{
-  position:fixed;bottom:22px;left:28px;z-index:200;
-  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
-  letter-spacing:.08em}
-#slide-info span{color:var(--teal)}
+/* ── SLIDE INFO — hidden in scroll mode ─────────────────────────── */
+#slide-info{display:none}
+#prev-btn,#next-btn{display:none!important}
 /* ── NAV BUTTONS ─────────────────────────────────────────────────── */
 .nav-btn{
   position:fixed;bottom:16px;z-index:200;
@@ -250,14 +247,14 @@ body{
   transform:translate(-50%,-50%);
   width:70px;height:70px;border-radius:50%;background:var(--card);
   border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.04em;
+  font-size:8px;font-weight:700;color:var(--teal);letter-spacing:.04em;
   text-align:center;line-height:1.4;padding:8px;
   box-shadow:0 0 20px var(--glow),0 0 40px var(--glow2)}
 .brain-node{
   position:absolute;width:76px;height:76px;border-radius:10px;
   background:var(--card);border:1px solid rgba(91,222,227,.3);
   display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:600;color:var(--white);letter-spacing:.02em;
+  font-size:8px;font-weight:600;color:var(--white);letter-spacing:.02em;
   text-align:center;line-height:1.3;padding:6px;word-break:break-word;
   transition:all .3s ease}
 .brain-node:hover{border-color:var(--teal);color:var(--teal);
@@ -416,7 +413,8 @@ body{
   /* ── Nav: hide on mobile, page scrolls normally ── */
   #prev-btn, #next-btn, #nav-dots { display:none !important; }
   .nav-btn{width:42px;height:42px;font-size:18px}
-  .brain-node{width:60px!important;height:60px!important;font-size:10px!important;padding:4px!important;}
+  .brain-node{width:60px!important;height:60px!important;font-size:7px!important;padding:4px!important;}
+  .brains-center{font-size:7px!important;}
 }
 
 @media(max-width:480px){
@@ -1065,32 +1063,8 @@ window.addEventListener('scroll', () => {
   bgCanvas.style.opacity = 1 - fadeProgress;
 }, { passive: true });
 
-// Prev / Next buttons
-document.getElementById('prev-btn').addEventListener('click', () => scrollToSlide(cur - 1));
-document.getElementById('next-btn').addEventListener('click', () => scrollToSlide(cur + 1));
-
-// Keyboard navigation (desktop only)
-document.addEventListener('keydown', e => {
-  if (window.innerWidth <= 768) return;
-  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); scrollToSlide(cur + 1); }
-  if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  { e.preventDefault(); scrollToSlide(cur - 1); }
-});
-
-// Touch / swipe (desktop only — mobile scrolls naturally)
-let tY = 0, tLocked = false;
-document.addEventListener('touchstart', e => {
-  if (window.innerWidth <= 768) return;
-  tY = e.touches[0].clientY;
-  tLocked = false;
-}, { passive: true });
-document.addEventListener('touchend', e => {
-  if (window.innerWidth <= 768 || tLocked) return;
-  const dy = tY - e.changedTouches[0].clientY;
-  if (Math.abs(dy) > 60) {
-    tLocked = true;
-    scrollToSlide(cur + (dy > 0 ? 1 : -1));
-  }
-}, { passive: true });
+// Scroll mode: prev/next buttons and swipe handlers disabled.
+// Navigation via side dots (scrollIntoView) and TOC links only.
 
 // ── Card 3D tilt ──────────────────────────────────────────────
 document.querySelectorAll('.card-3d').forEach(card => {
