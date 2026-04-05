@@ -241,7 +241,7 @@ body{
   font-size:14px;font-weight:700;color:var(--teal);letter-spacing:.06em;
   text-align:center;box-shadow:0 0 20px var(--glow),0 0 40px var(--glow2)}
 .brain-node{
-  position:absolute;width:90px;height:90px;border-radius:10px;
+  position:absolute;width:76px;height:76px;border-radius:10px;
   background:var(--card);border:1px solid rgba(91,222,227,.3);
   display:flex;align-items:center;justify-content:center;
   font-size:14px;font-weight:600;color:var(--white);letter-spacing:.03em;text-align:center;
@@ -398,7 +398,7 @@ body{
   /* ── Nav: hide on mobile, page scrolls normally ── */
   #prev-btn, #next-btn, #nav-dots { display:none !important; }
   .nav-btn{width:42px;height:42px;font-size:18px}
-  .brain-node{width:74px!important;height:74px!important;font-size:12px!important;}
+  .brain-node{width:60px!important;height:60px!important;font-size:11px!important;}
 }
 
 @media(max-width:480px){
@@ -463,8 +463,27 @@ body{
   <p style="position:absolute;bottom:68px;left:50%;transform:translateX(-50%);z-index:10;color:#888884;font-size:13px;font-family:'Inter',sans-serif;letter-spacing:0.08em;text-align:center;white-space:nowrap;">Built in Dubai. Engineered for the Gulf. Designed for the world.</p>
   <div class="slide-chevron">&#8964;</div>
 </section>
+<!-- ════════════════ SLIDE 2 · TABLE OF CONTENTS ════════════════ -->
+<section class="slide" id="s1">
+  <div class="persp-grid-bg"></div>
+  <div class="s-tag">CONTENTS</div>
+  <div class="s-h1">Company Profile <span class="tc">2026</span></div>
+  <div class="gap8"></div>
+    <div class="toc-item" onclick="scrollToSlide(3)" style="cursor:pointer"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-pg">p.03</span></div>
+    <div class="toc-item" onclick="scrollToSlide(4)" style="cursor:pointer"><span class="toc-num">02</span><span class="toc-title">About NUHAI</span><span class="toc-pg">p.04</span></div>
+    <div class="toc-item" onclick="scrollToSlide(5)" style="cursor:pointer"><span class="toc-num">03</span><span class="toc-title">The ORACLE AI System</span><span class="toc-pg">p.05</span></div>
+    <div class="toc-item" onclick="scrollToSlide(6)" style="cursor:pointer"><span class="toc-num">04</span><span class="toc-title">Products &amp; Services</span><span class="toc-pg">p.06</span></div>
+    <div class="toc-item" onclick="scrollToSlide(7)" style="cursor:pointer"><span class="toc-num">05</span><span class="toc-title">Our Process</span><span class="toc-pg">p.07</span></div>
+    <div class="toc-item" onclick="scrollToSlide(8)" style="cursor:pointer"><span class="toc-num">06</span><span class="toc-title">Core Values</span><span class="toc-pg">p.08</span></div>
+    <div class="toc-item" onclick="scrollToSlide(9)" style="cursor:pointer"><span class="toc-num">07</span><span class="toc-title">Why NUHAI</span><span class="toc-pg">p.09</span></div>
+    <div class="toc-item" onclick="scrollToSlide(10)" style="cursor:pointer"><span class="toc-num">08</span><span class="toc-title">NUHAI in Numbers</span><span class="toc-pg">p.10</span></div>
+    <div class="toc-item" onclick="scrollToSlide(11)" style="cursor:pointer"><span class="toc-num">09</span><span class="toc-title">Industries We Serve</span><span class="toc-pg">p.11</span></div>
+    <div class="toc-item" onclick="scrollToSlide(12)" style="cursor:pointer"><span class="toc-num">10</span><span class="toc-title">Get in Touch</span><span class="toc-pg">p.12</span></div>
+  </div>
+  <div class="slide-chevron">&#8595;</div>
+</section>
 
-<!-- ════════════════ SLIDE 2 · ABOUT NUHAI ════════════════ -->
+<!-- ════════════════ SLIDE 3 · ABOUT NUHAI ════════════════ -->
 <section class="slide" id="s-about" style="position:relative;">
   <div style="position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.25;" id="about-globe-bg"></div>
   <div style="position:relative;z-index:10;width:100%;max-width:900px;display:flex;flex-direction:column;align-items:flex-start;">
@@ -473,25 +492,6 @@ body{
     <h1 class="s-h1" style="text-align:left;font-size:52px;letter-spacing:-1.5px;line-height:1.1;color:var(--teal);margin-bottom:28px;">Powered by AI.</h1>
     <p style="color:#888884;font-size:18px;line-height:1.75;margin-bottom:32px;max-width:640px;">An AI marketing system built in Dubai, engineered for the Gulf market.</p>
     <div style="width:60px;height:2px;background:var(--teal);margin-bottom:32px;"></div>
-
-    <div class="grid2" style="width:100%;max-width:900px;margin-bottom:40px;">
-      <div class="card" style="background:#111115;border:1px solid #1E1E24;border-top:2.5px solid var(--teal);padding:24px;">
-        <div class="s-tag" style="margin-bottom:8px;font-size:9px;">Headquarters</div>
-        <div style="color:var(--white);font-size:14px;font-weight:600;">Dubai, United Arab Emirates</div>
-      </div>
-      <div class="card" style="background:#111115;border:1px solid #1E1E24;border-top:2.5px solid var(--teal);padding:24px;">
-        <div class="s-tag" style="margin-bottom:8px;font-size:9px;">Industry</div>
-        <div style="color:var(--white);font-size:14px;font-weight:600;">AI Powered Marketing Technology</div>
-      </div>
-      <div class="card" style="background:#111115;border:1px solid #1E1E24;border-top:2.5px solid var(--teal);padding:24px;">
-        <div class="s-tag" style="margin-bottom:8px;font-size:9px;">Website</div>
-        <div style="color:var(--white);font-size:14px;font-weight:600;">www.nuhai.net</div>
-      </div>
-      <div class="card" style="background:#111115;border:1px solid #1E1E24;border-top:2.5px solid var(--teal);padding:24px;">
-        <div class="s-tag" style="margin-bottom:8px;font-size:9px;">Contact</div>
-        <div style="color:var(--white);font-size:14px;font-weight:600;">info@nuhai.net</div>
-      </div>
-    </div>
 
     <div class="grid3" style="width:100%;max-width:900px;">
       <div class="stat-card">
@@ -513,32 +513,35 @@ body{
   </div>
   <div class="slide-chevron">&#8964;</div>
 </section>
-<!-- ════════════════ SLIDE 2 · TOC ════════════════ -->
-<section class="slide" id="s1">
-  <div class="persp-grid-bg"></div>
-  <div class="s-tag">CONTENTS</div>
-  <div class="s-h1">Company Profile <span class="tc">2026</span></div>
-  <div class="gap8"></div>
-  <div style="width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px">
-    <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-pg">p.03</span></div>
-    <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">About NUHAI</span><span class="toc-pg">p.04</span></div>
-    <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">The ORACLE AI System</span><span class="toc-pg">p.05</span></div>
-    <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">Products &amp; Services</span><span class="toc-pg">p.06</span></div>
-    <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">Our Process</span><span class="toc-pg">p.07</span></div>
-    <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">Core Values</span><span class="toc-pg">p.08</span></div>
-    <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">Why NUHAI</span><span class="toc-pg">p.09</span></div>
-    <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">NUHAI in Numbers</span><span class="toc-pg">p.10</span></div>
-    <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">Industries We Serve</span><span class="toc-pg">p.11</span></div>
-    <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">Get in Touch</span><span class="toc-pg">p.12</span></div>
-  </div>
-  <div class="slide-chevron">&#8595;</div>
-</section>
 
 <!-- ════════════════ SLIDE 3 · EXEC SUMMARY ════════════════ -->
 <section class="slide" id="s2">
   <div class="s-tag">01 · EXECUTIVE SUMMARY</div>
   <div class="s-h1">Business Growth Intelligence.<br><span class="tc">Powered by AI.</span></div>
   <p class="s-body">NUHAI is an AI-powered business growth intelligence system headquartered in Dubai, UAE. Purpose-built for the Gulf market, combining autonomous AI technology with deep cultural intelligence to deliver measurable, guaranteed revenue outcomes. At the core is ORACLE: 35 specialized AI agents working in parallel across 8 department brains.</p>
+  <div class="gap20"></div>
+  <div class="grid4" style="max-width:720px;margin:0 auto;width:100%">
+    <div class="stat-card float-a">
+      <span class="stat-num">8</span>
+      <span class="stat-lbl">Department Brains</span>
+      <span class="stat-sub">35+ Agents</span>
+    </div>
+    <div class="stat-card float-b">
+      <span class="stat-num">89%</span>
+      <span class="stat-lbl">Prediction Accuracy</span>
+      <span class="stat-sub">Gulf Campaigns</span>
+    </div>
+    <div class="stat-card float-c">
+      <span class="stat-num">24/7</span>
+      <span class="stat-lbl">Autonomous Operation</span>
+      <span class="stat-sub">No bottlenecks</span>
+    </div>
+    <div class="stat-card float-d">
+      <span class="stat-num">9</span>
+      <span class="stat-lbl">Cultural Profiles</span>
+      <span class="stat-sub">Gulf-Calibrated</span>
+    </div>
+  </div>
   <div class="slide-chevron">&#8595;</div>
 </section>
 
@@ -958,8 +961,8 @@ animate();
 // ─── Smooth Scroll Navigation ────────────────────────────────
 const SLIDES_DATA = [
   ['01', 'Cover'],
-  ['02', 'About NUHAI'],
-  ['03', 'Table of Contents'],
+  ['02', 'Table of Contents'],
+  ['03', 'About NUHAI'],
   ['04', 'Executive Summary'],
   ['05', 'About NUHAI'],
   ['06', 'The ORACLE AI System'],
@@ -993,10 +996,10 @@ function updateUI(n) {
   document.getElementById('si-title').textContent = SLIDES_DATA[n][1];
 
   const onCover  = (n === 0);
-  const onOracle = (n === 4);
+  const onOracle = (n === 5);
   torus.visible     = onCover;
   torusGlow.visible = onCover;
-  sphere.visible    = onOracle;
+  // sphere opacity handled by oracleFadeObs below
   pMat.opacity = onCover ? .22 : (n === 11 ? .32 : .14);
 }
 
@@ -1023,6 +1026,21 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 
 slides.forEach(s => observer.observe(s));
+
+// ── ORACLE sphere smooth fade ──────────────────────────────────────
+sphere.visible = false;
+const oracleThresholds = Array.from({length:41}, (_,i) => i * 0.025);
+const oracleFadeObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    const r = e.intersectionRatio;
+    // Fade in quickly (0→0.4 ratio = 0→100% opacity), fade out symmetrically
+    const opacity = Math.min(r / 0.4, 1) * 0.28;
+    sphMat.opacity = opacity;
+    sphere.visible = opacity > 0.005;
+  });
+}, {threshold: oracleThresholds});
+const oracleSec = document.getElementById('s4');
+if (oracleSec) oracleFadeObs.observe(oracleSec);
 
 // Make the first slide (cover) visible immediately on page load
 if (slides[0]) slides[0].classList.add('visible');
@@ -1071,7 +1089,7 @@ document.querySelectorAll('.card-3d').forEach(card => {
 const brainNames = ['Creative','Intelligence','Media','Learning',
                     'Performance','Strategy','Growth','Client'];
 const orbital = document.getElementById('brains-orbital');
-const R_ORBIT = 125, CX = 170, CY = 170, NODE_SIZE = 90;
+const R_ORBIT = 120, CX = 170, CY = 170, NODE_SIZE = 76;
 
 brainNames.forEach((name, i) => {
   const angle = (i / brainNames.length) * Math.PI * 2 - Math.PI / 2;
