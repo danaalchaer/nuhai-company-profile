@@ -446,6 +446,59 @@ body{
   /* ── FIX 14: Get in Touch — full-width CTA & contact card ── */
   .cta-btn{width:100%;justify-content:center;padding:14px 20px;}
   .contact-card{max-width:100% !important;width:100% !important;box-sizing:border-box;}
+
+  /* ── USER OVERRIDES ─────────────────────────────────────────── */
+
+  /* GLOBAL RESET */
+  *,*::before,*::after{box-sizing:border-box;max-width:100%;}
+  html,body{overflow-x:hidden !important;width:100% !important;}
+
+  /* SECTIONS */
+  section{width:100% !important;overflow-x:hidden !important;padding:60px 20px !important;min-height:100vh;height:auto !important;}
+
+  /* COVER */
+  #s0{height:100vh !important;min-height:100vh !important;padding:0 !important;display:flex;align-items:center;justify-content:center;overflow:hidden !important;}
+
+  /* HEADINGS */
+  h1,h2{font-size:clamp(26px,8vw,40px) !important;letter-spacing:-0.5px !important;line-height:1.2 !important;word-break:break-word !important;}
+  h3{font-size:clamp(15px,5vw,20px) !important;}
+  p,li{font-size:clamp(13px,4vw,15px) !important;line-height:1.7 !important;}
+
+  /* GRIDS TO SINGLE COLUMN */
+  .grid,[class*="grid"],.cards-row,.stats-row,.info-grid,.value-cards,.advantage-cards,.process-steps,.steps-row,.product-cards{display:flex !important;flex-direction:column !important;gap:16px !important;width:100% !important;}
+
+  /* CARDS */
+  [class*="card"],.stat-card,.toc-entry,.product-card,.value-card,.process-step,.sector-item{width:100% !important;min-width:unset !important;max-width:100% !important;padding:20px 16px !important;box-sizing:border-box !important;}
+
+  /* NAV */
+  nav,header{padding:12px 20px !important;width:100% !important;box-sizing:border-box !important;}
+  nav img{height:24px !important;width:auto !important;}
+
+  /* HIDE SIDE DOTS */
+  #nav-dots,.nav-dots,[class*="nav-dot"]{display:none !important;}
+
+  /* BRAIN DIAGRAM */
+  #brains-orbital{transform:scale(0.55) !important;transform-origin:top center !important;margin:0 auto !important;display:block !important;}
+
+  /* COMPARISON TABLE */
+  .comp-table-wrap table{display:none !important;}
+  .comp-mobile{display:block !important;}
+
+  /* INDUSTRIES */
+  .sector-grid,.industries-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;}
+
+  /* TOC */
+  .toc-dots{display:none !important;}
+  .toc-heading,.toc-year{font-size:32px !important;}
+
+  /* PROCESS ARROWS */
+  .step-arrow,.connector-arrow{display:none !important;}
+
+  /* CTA BUTTON */
+  .cta-btn,[class*="cta"]{width:100% !important;text-align:center !important;padding:16px 20px !important;}
+
+  /* OVERFLOW FIX */
+  .persp-grid-bg{width:100% !important;max-width:100vw !important;overflow:hidden !important;}
 }
 
 @media(max-width:480px){
