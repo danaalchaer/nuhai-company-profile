@@ -15,12 +15,12 @@
 }
 html{
   scroll-behavior:smooth;
-  overflow-y:auto;
+  overflow-y:auto !important;
   height:auto;
   background:var(--bg);
 }
 body{
-  width:100%;height:auto;overflow-x:hidden;
+  width:100%;height:auto;overflow-x:hidden;overflow-y:auto !important;
   background:var(--bg);color:var(--white);
   font-family:'Inter',-apple-system,sans-serif;
 }
@@ -41,6 +41,8 @@ body{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:120px 80px;
 }
+/* Cover: always full viewport */
+#s0{height:100vh !important;min-height:100vh !important;overflow:hidden !important;}
 /* Slides with lots of content: allow natural height */
 #s4,#s8{
   height:auto;
@@ -333,6 +335,8 @@ body{
     overflow:visible !important;
     width:100%;
   }
+  /* Cover must stay full-screen even on mobile */
+  #s0{height:100vh !important;min-height:100vh !important;overflow:hidden !important;padding:0 !important;}
   #s4,#s8{
     padding:56px 18px 56px !important;
     justify-content:flex-start;
@@ -349,6 +353,7 @@ body{
     overflow-x:hidden !important;
     box-sizing:border-box;
   }
+  section#s0{height:100vh !important;min-height:100vh !important;overflow:hidden !important;padding:0 !important;}
 
   /* ── Cover ring: shrink + make pseudo-element dots scale correctly ── */
   .cover-ring-wrap{width:220px;height:220px;margin-top:0}
@@ -1204,6 +1209,39 @@ if(numSection){
   }, {threshold:0.3});
   numObs.observe(numSection);
 }
+
+// Oracle section background globe
+(function(){
+  const container = document.querySelector('#s4');
+  if(!container) return;
+  const oCanvas = document.createElement('canvas');
+  oCanvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.18;pointer-events:none;';
+  container.insertBefore(oCanvas, container.firstChild);
+  const oRenderer = new THREE.WebGLRenderer({canvas:oCanvas, alpha:true, antialias:true});
+  oRenderer.setSize(container.offsetWidth || window.innerWidth, container.offsetHeight || window.innerHeight);
+  oRenderer.setClearColor(0x000000, 0);
+  const oScene = new THREE.Scene();
+  const oCamera = new THREE.PerspectiveCamera(45, (container.offsetWidth || window.innerWidth) / (container.offsetHeight || window.innerHeight), 0.1, 1000);
+  oCamera.position.z = 2.5;
+  const oGeo = new THREE.SphereGeometry(1, 32, 32);
+  const oMat = new THREE.MeshBasicMaterial({color:0x5BDEE3, wireframe:true, transparent:true, opacity:0.3});
+  const oSphere = new THREE.Mesh(oGeo, oMat);
+  oScene.add(oSphere);
+  function oAnimate(){
+    requestAnimationFrame(oAnimate);
+    oSphere.rotation.y += 0.002;
+    oSphere.rotation.x += 0.001;
+    oRenderer.render(oScene, oCamera);
+  }
+  oAnimate();
+  window.addEventListener('resize', () => {
+    const w = container.offsetWidth || window.innerWidth;
+    const h = container.offsetHeight || window.innerHeight;
+    oRenderer.setSize(w, h);
+    oCamera.aspect = w / h;
+    oCamera.updateProjectionMatrix();
+  });
+})();
 </script>
 </body>
 </html>
