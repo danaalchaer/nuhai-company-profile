@@ -50,6 +50,11 @@ body{
   padding-top:90px;
   padding-bottom:80px;
 }
+#s4{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+}
 /* ── NAV DOTS ───────────────────────────────────────────────────── */
 #nav-dots{
   position:fixed;right:22px;top:50%;transform:translateY(-50%);
@@ -242,11 +247,16 @@ body{
   position:relative;width:340px;height:340px;flex-shrink:0;
   display:block;margin:0 auto}
 .brains-orbital-wrap{
-  display:flex;justify-content:center;align-items:center;width:100%}
+  width:100% !important;max-width:100% !important;
+  display:flex !important;justify-content:center !important;align-items:center !important;
+  overflow:hidden !important;margin:0 auto !important;padding:0 !important;}
+#brains-orbital{
+  margin:0 auto !important;position:relative !important;
+  display:block !important;left:0 !important;right:0 !important;}
 .brains-center{
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
+  position:absolute !important;
+  top:50% !important;left:50% !important;
+  transform:translate(-50%,-50%) !important;
   width:70px;height:70px;border-radius:50%;background:var(--card);
   border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;
   font-size:8px;font-weight:700;color:var(--teal);letter-spacing:.04em;
@@ -387,15 +397,11 @@ body{
   #s4 .oracle-flex{flex-direction:column;align-items:center;gap:24px}
   #s4 .oracle-caps{min-width:unset;max-width:100%;width:100%}
   .brains-orbital-wrap{
-    display:flex;justify-content:center;align-items:center;
-    width:100%;height:221px;  /* 340 × 0.65 — reserves correct space */
+    width:100% !important;padding:0 !important;margin:0 auto !important;overflow:hidden !important;
   }
-  .brains-orbital{
-    transform:scale(0.65);
-    transform-origin:center center;
-    margin:0 auto;display:block;
-    /* Override any stray margin-left from inspector */
-    margin-left:auto !important;margin-right:auto !important;
+  #brains-orbital{
+    transform:scale(0.55) !important;transform-origin:center center !important;
+    margin:0 auto !important;display:block !important;left:auto !important;right:auto !important;
   }
 
   /* ── Slide 7: process steps stack vertically ── */
@@ -477,8 +483,7 @@ body{
   /* HIDE SIDE DOTS */
   #nav-dots,.nav-dots,[class*="nav-dot"]{display:none !important;}
 
-  /* BRAIN DIAGRAM */
-  #brains-orbital{transform:scale(0.55) !important;transform-origin:top center !important;margin:0 auto !important;display:block !important;}
+  /* BRAIN DIAGRAM — handled by rule above */
 
   /* COMPARISON TABLE */
   .comp-table-wrap table{display:none !important;}
