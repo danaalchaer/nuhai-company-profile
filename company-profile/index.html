@@ -544,6 +544,13 @@ body{
 }
 /* Cover section content should be above vignette */
 #s0 > div{z-index:10;}
+/* ── PERFORMANCE HINTS ──────────────────────────────────────────── */
+section{will-change:auto;contain:layout style;}
+canvas{will-change:auto;}
+@media(max-width:768px){
+  section{will-change:auto;transform:translateZ(0);}
+  *{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+}
 </style>
 </head>
 <body>
@@ -952,10 +959,13 @@ body{
 <button class="nav-btn" id="next-btn" aria-label="Next slide">&#8595;</button>
 
 <script>
+// ─── Mobile detection ────────────────────────────────────────────
+const isMobile = window.innerWidth <= 768;
+
 // ─── Three.js Setup ──────────────────────────────────────────────
 const canvas = document.getElementById('bg-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new THREE.Scene();
@@ -963,7 +973,7 @@ const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerH
 camera.position.z = 500;
 
 // ── Particles ──────────────────────────────────────────────────
-const PARTICLE_COUNT = 180;
+const PARTICLE_COUNT = isMobile ? 60 : 180;
 const pGeo = new THREE.BufferGeometry();
 const pPos = new Float32Array(PARTICLE_COUNT * 3);
 const pVel = new Float32Array(PARTICLE_COUNT * 3);
@@ -983,7 +993,7 @@ const particles = new THREE.Points(pGeo, pMat);
 scene.add(particles);
 
 // ── Cover Torus ───────────────────────────────────────────────
-const torusGeo = new THREE.TorusGeometry(169, 5.85, 16, 120);
+const torusGeo = new THREE.TorusGeometry(169, 5.85, isMobile ? 8 : 16, isMobile ? 60 : 120);
 const torusMat = new THREE.MeshBasicMaterial({
   color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .45 });
 const torus = new THREE.Mesh(torusGeo, torusMat);
@@ -998,7 +1008,7 @@ torusGlow.visible = true;
 scene.add(torusGlow);
 
 // ── ORACLE Sphere ─────────────────────────────────────────────
-const sphGeo = new THREE.SphereGeometry(117, 28, 28);
+const sphGeo = new THREE.SphereGeometry(117, isMobile ? 14 : 28, isMobile ? 14 : 28);
 const sphMat = new THREE.MeshBasicMaterial({
   color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .28 });
 const sphere = new THREE.Mesh(sphGeo, sphMat);
@@ -1009,9 +1019,12 @@ scene.add(pointLight);
 scene.add(sphere);
 
 // ── Animate ───────────────────────────────────────────────────
+const rotationSpeed = isMobile ? 0.001 : 0.002;
 let clock = new THREE.Clock();
+let animFrameId_cover = null;
+
 function animate() {
-  requestAnimationFrame(animate);
+  animFrameId_cover = requestAnimationFrame(animate);
   const t = clock.getElapsedTime();
 
   const pa = pGeo.attributes.position.array;
@@ -1027,19 +1040,35 @@ function animate() {
   pGeo.attributes.position.needsUpdate = true;
 
   if (torus.visible) {
-    torus.rotation.x = t * 0.09;
-    torus.rotation.y = t * 0.14;
-    torus.rotation.z = t * 0.03;
-    torusGlow.rotation.x = t * 0.06;
-    torusGlow.rotation.y = -t * 0.11;
+    torus.rotation.x = t * (0.09 * rotationSpeed / 0.002);
+    torus.rotation.y = t * (0.14 * rotationSpeed / 0.002);
+    torus.rotation.z = t * (0.03 * rotationSpeed / 0.002);
+    torusGlow.rotation.x = t * (0.06 * rotationSpeed / 0.002);
+    torusGlow.rotation.y = -t * (0.11 * rotationSpeed / 0.002);
   }
   if (sphere.visible) {
-    sphere.rotation.x = t * 0.07;
-    sphere.rotation.y = t * 0.1;
+    sphere.rotation.x = t * (0.07 * rotationSpeed / 0.002);
+    sphere.rotation.y = t * (0.1 * rotationSpeed / 0.002);
   }
   renderer.render(scene, camera);
 }
-animate();
+
+// Pause cover globe when cover section is off-screen
+const observer_cover = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      if (!animFrameId_cover) animate();
+    } else {
+      if (animFrameId_cover) {
+        cancelAnimationFrame(animFrameId_cover);
+        animFrameId_cover = null;
+      }
+    }
+  });
+}, { threshold: 0.1 });
+const coverSection = document.getElementById('s0');
+if (coverSection) observer_cover.observe(coverSection);
+animate(); // start immediately; observer will pause when off-screen
 
 // ─── Smooth Scroll Navigation ────────────────────────────────
 const SLIDES_DATA = [
@@ -1108,7 +1137,21 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.5 });
 
-slides.forEach(s => observer.observe(s));
+if (isMobile) {
+  // On mobile: skip fade-in animation entirely — make all slides visible immediately
+  slides.forEach(s => {
+    s.classList.add('visible');
+    s.style.opacity = '1';
+    s.style.transform = 'none';
+    s.querySelectorAll('.card, .stat-card').forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.transitionDelay = '0s';
+    });
+  });
+} else {
+  slides.forEach(s => observer.observe(s));
+}
 
 // ── ORACLE sphere smooth fade ──────────────────────────────────────
 sphere.visible = false;
@@ -1204,8 +1247,8 @@ window.addEventListener('resize', () => {
 // Init
 updateUI(0);
 
-// About section globe (muted background)
-(function(){
+// About section globe (muted background) — desktop only
+if (!isMobile) (function(){
   const el = document.getElementById('about-globe-bg');
   if(!el) return;
   const w = el.offsetWidth || window.innerWidth;
@@ -1224,12 +1267,20 @@ updateUI(0);
   scene2.add(globe2);
   const amb2 = new THREE.AmbientLight(0xffffff,0.3);
   scene2.add(amb2);
-  function animate2(){requestAnimationFrame(animate2);globe2.rotation.y+=0.001;renderer2.render(scene2,camera2);}
-  animate2();
+  let animFrameId_about = null;
+  function animate2(){animFrameId_about=requestAnimationFrame(animate2);globe2.rotation.y+=0.001;renderer2.render(scene2,camera2);}
+  const observer_about = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { if (!animFrameId_about) animate2(); }
+      else { if (animFrameId_about) { cancelAnimationFrame(animFrameId_about); animFrameId_about = null; } }
+    });
+  }, { threshold: 0.1 });
+  const aboutSec = document.getElementById('s-about');
+  if (aboutSec) observer_about.observe(aboutSec); else animate2();
 })();
 
-// Oracle section particles
-(function(){
+// Oracle section particles — desktop only
+if (!isMobile) (function(){
   const canvas = document.getElementById('oracle-particles');
   if(!canvas) return;
   function resize(){ canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
@@ -1242,7 +1293,9 @@ updateUI(0);
     speed: Math.random() * 0.4 + 0.1,
     opacity: Math.random() * 0.3 + 0.2
   }));
+  let animFrameId_oparts = null;
   function drawParticles(){
+    animFrameId_oparts = requestAnimationFrame(drawParticles);
     ctx.clearRect(0,0,canvas.width,canvas.height);
     particles.forEach(p => {
       ctx.beginPath();
@@ -1252,9 +1305,15 @@ updateUI(0);
       p.y -= p.speed;
       if(p.y < -5){ p.y = canvas.height + 5; p.x = Math.random() * canvas.width; }
     });
-    requestAnimationFrame(drawParticles);
   }
-  drawParticles();
+  const observer_oparts = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { if (!animFrameId_oparts) drawParticles(); }
+      else { if (animFrameId_oparts) { cancelAnimationFrame(animFrameId_oparts); animFrameId_oparts = null; } }
+    });
+  }, { threshold: 0.1 });
+  const oracleSec2 = document.getElementById('s4');
+  if (oracleSec2) observer_oparts.observe(oracleSec2); else drawParticles();
   window.addEventListener('resize', resize);
 })();
 
@@ -1289,8 +1348,8 @@ if(numSection){
   numObs.observe(numSection);
 }
 
-// Oracle section background globe
-(function(){
+// Oracle section background globe — desktop only
+if (!isMobile) (function(){
   const container = document.querySelector('#s4');
   if(!container) return;
   const oCanvas = document.createElement('canvas');
@@ -1306,13 +1365,20 @@ if(numSection){
   const oMat = new THREE.MeshBasicMaterial({color:0x5BDEE3, wireframe:true, transparent:true, opacity:0.3});
   const oSphere = new THREE.Mesh(oGeo, oMat);
   oScene.add(oSphere);
+  let animFrameId_oracle = null;
   function oAnimate(){
-    requestAnimationFrame(oAnimate);
+    animFrameId_oracle = requestAnimationFrame(oAnimate);
     oSphere.rotation.y += 0.002;
     oSphere.rotation.x += 0.001;
     oRenderer.render(oScene, oCamera);
   }
-  oAnimate();
+  const observer_oracle = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { if (!animFrameId_oracle) oAnimate(); }
+      else { if (animFrameId_oracle) { cancelAnimationFrame(animFrameId_oracle); animFrameId_oracle = null; } }
+    });
+  }, { threshold: 0.1 });
+  observer_oracle.observe(container);
   window.addEventListener('resize', () => {
     const w = container.offsetWidth || window.innerWidth;
     const h = container.offsetHeight || window.innerHeight;
