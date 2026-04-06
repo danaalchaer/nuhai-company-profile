@@ -239,7 +239,7 @@ body{
 .comp-table tr:hover td.col-nuhai{background:rgba(91,222,227,.06)}
 /* ── 8-BRAIN ORBITAL ────────────────────────────────────────────── */
 .brains-orbital{
-  position:relative;width:340px;height:340px;flex-shrink:0;
+  position:relative;width:440px;height:440px;flex-shrink:0;
   display:block;margin:0 auto}
 .brains-orbital-wrap{
   display:flex;justify-content:center;align-items:center;width:100%}
@@ -247,20 +247,20 @@ body{
   position:absolute;
   top:50%;left:50%;
   transform:translate(-50%,-50%);
-  width:70px;height:70px;border-radius:50%;background:var(--card);
+  width:90px;height:90px;border-radius:50%;background:var(--card);
   border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;
-  font-size:8px;font-weight:700;color:var(--teal);letter-spacing:.04em;
-  text-align:center;line-height:1.4;padding:8px;
-  box-shadow:0 0 20px var(--glow),0 0 40px var(--glow2)}
+  font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.04em;
+  text-align:center;line-height:1.4;padding:10px;
+  box-shadow:0 0 24px var(--glow),0 0 48px var(--glow2)}
 .brain-node{
-  position:absolute;width:76px;height:76px;border-radius:10px;
-  background:var(--card);border:1px solid rgba(91,222,227,.3);
+  position:absolute;width:92px;height:92px;border-radius:12px;
+  background:var(--card);border:1px solid rgba(91,222,227,.35);
   display:flex;align-items:center;justify-content:center;
-  font-size:8px;font-weight:600;color:var(--white);letter-spacing:.02em;
-  text-align:center;line-height:1.3;padding:6px;word-break:break-word;
+  font-size:10.5px;font-weight:600;color:var(--white);letter-spacing:.02em;
+  text-align:center;line-height:1.35;padding:8px;word-break:break-word;
   transition:all .3s ease}
 .brain-node:hover{border-color:var(--teal);color:var(--teal);
-  box-shadow:0 0 16px var(--glow);transform:scale(1.08)}
+  box-shadow:0 0 20px var(--glow);transform:scale(1.08)}
 /* ── PROCESS STEPS ──────────────────────────────────────────────── */
 .process-wrap{display:flex;gap:8px;align-items:stretch;width:100%;position:relative}
 .process-step{flex:1;background:var(--card);border:1px solid var(--border);
@@ -388,13 +388,12 @@ body{
   #s4 .oracle-caps{min-width:unset;max-width:100%;width:100%}
   .brains-orbital-wrap{
     display:flex;justify-content:center;align-items:center;
-    width:100%;height:221px;  /* 340 × 0.65 — reserves correct space */
+    width:100%;height:286px;  /* 440 × 0.65 — reserves correct space */
   }
   .brains-orbital{
     transform:scale(0.65);
     transform-origin:center center;
     margin:0 auto;display:block;
-    /* Override any stray margin-left from inspector */
     margin-left:auto !important;margin-right:auto !important;
   }
 
@@ -418,8 +417,8 @@ body{
   /* ── Nav: hide on mobile, page scrolls normally ── */
   #prev-btn, #next-btn, #nav-dots { display:none !important; }
   .nav-btn{width:42px;height:42px;font-size:18px}
-  .brain-node{width:60px!important;height:60px!important;font-size:7px!important;padding:4px!important;}
-  .brains-center{font-size:7px!important;}
+  .brain-node{width:72px!important;height:72px!important;font-size:8px!important;padding:5px!important;}
+  .brains-center{width:74px!important;height:74px!important;font-size:8px!important;}
 
   /* ── FIX 1: Global html/body overflow ── */
   html,body{overflow-x:hidden !important;max-width:100vw;}
@@ -506,7 +505,7 @@ body{
 
   /* Extra scale-down for orbital on very small screens */
   .brains-orbital{transform:scale(0.50);transform-origin:center center}
-  .brains-orbital-wrap{height:170px} /* 340 × 0.50 */
+  .brains-orbital-wrap{height:220px} /* 440 × 0.50 */
 
   /* Stack exec-summary stat cards 2×2 → 1-col */
   #s2 .grid4{grid-template-columns:repeat(2,1fr) !important}
@@ -1210,7 +1209,7 @@ document.querySelectorAll('.card-3d').forEach(card => {
 const brainNames = ['Creative','Intelligence','Media','Learning',
                     'Performance','Strategy','Growth','Client'];
 const orbital = document.getElementById('brains-orbital');
-const R_ORBIT = 120, CX = 170, CY = 170, NODE_SIZE = 76;
+const R_ORBIT = 160, CX = 220, CY = 220, NODE_SIZE = 92;
 
 brainNames.forEach((name, i) => {
   const angle = (i / brainNames.length) * Math.PI * 2 - Math.PI / 2;
@@ -1227,11 +1226,11 @@ brainNames.forEach((name, i) => {
 
 // SVG orbital ring
 const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-svg.style.cssText = 'position:absolute;top:0;left:0;width:340px;height:340px;pointer-events:none';
-svg.setAttribute('viewBox','0 0 340 340');
+svg.style.cssText = 'position:absolute;top:0;left:0;width:440px;height:440px;pointer-events:none';
+svg.setAttribute('viewBox','0 0 440 440');
 const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-circle.setAttribute('cx','170'); circle.setAttribute('cy','170');
-circle.setAttribute('r','125'); circle.setAttribute('fill','none');
+circle.setAttribute('cx','220'); circle.setAttribute('cy','220');
+circle.setAttribute('r','163'); circle.setAttribute('fill','none');
 circle.setAttribute('stroke','rgba(91,222,227,0.18)'); circle.setAttribute('stroke-width','1');
 circle.setAttribute('stroke-dasharray','4 6');
 svg.appendChild(circle);
