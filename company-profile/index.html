@@ -387,13 +387,13 @@ body{
   #s4 .oracle-flex{flex-direction:column;align-items:center;gap:24px}
   #s4 .oracle-caps{min-width:unset;max-width:100%;width:100%}
   .brains-orbital-wrap{
-    display:flex;justify-content:center;align-items:center;
-    width:100%;height:286px;  /* 440 × 0.65 — reserves correct space */
-    overflow:hidden;
+    display:flex;justify-content:center;align-items:flex-start;
+    width:100%;height:286px;  /* 440 × 0.65 */
+    overflow:visible;
   }
   .brains-orbital{
     transform:scale(0.65);
-    transform-origin:center center;
+    transform-origin:top center;
     flex-shrink:0;
     margin:0 auto;display:block;
     margin-left:auto !important;margin-right:auto !important;
@@ -506,8 +506,8 @@ body{
   .cover-ring-wrap{width:180px;height:180px}
 
   /* Extra scale-down for orbital on very small screens */
-  .brains-orbital{transform:scale(0.50);transform-origin:center center;flex-shrink:0;}
-  .brains-orbital-wrap{height:220px;overflow:hidden;} /* 440 × 0.50 */
+  .brains-orbital{transform:scale(0.50);transform-origin:top center;flex-shrink:0;}
+  .brains-orbital-wrap{height:220px;overflow:visible;} /* 440 × 0.50 */
 
   /* Stack exec-summary stat cards 2×2 → 1-col */
   #s2 .grid4{grid-template-columns:repeat(2,1fr) !important}
