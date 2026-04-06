@@ -964,8 +964,8 @@ const isMobile = window.innerWidth <= 768;
 
 // ─── Three.js Setup ──────────────────────────────────────────────
 const canvas = document.getElementById('bg-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
-renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new THREE.Scene();
@@ -993,7 +993,7 @@ const particles = new THREE.Points(pGeo, pMat);
 scene.add(particles);
 
 // ── Cover Torus ───────────────────────────────────────────────
-const torusGeo = new THREE.TorusGeometry(169, 5.85, isMobile ? 8 : 16, isMobile ? 60 : 120);
+const torusGeo = new THREE.TorusGeometry(169, 5.85, 16, 120);
 const torusMat = new THREE.MeshBasicMaterial({
   color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .45 });
 const torus = new THREE.Mesh(torusGeo, torusMat);
@@ -1008,7 +1008,7 @@ torusGlow.visible = true;
 scene.add(torusGlow);
 
 // ── ORACLE Sphere ─────────────────────────────────────────────
-const sphGeo = new THREE.SphereGeometry(117, isMobile ? 14 : 28, isMobile ? 14 : 28);
+const sphGeo = new THREE.SphereGeometry(117, 28, 28);
 const sphMat = new THREE.MeshBasicMaterial({
   color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .28 });
 const sphere = new THREE.Mesh(sphGeo, sphMat);
@@ -1348,8 +1348,8 @@ if(numSection){
   numObs.observe(numSection);
 }
 
-// Oracle section background globe — desktop only
-if (!isMobile) (function(){
+// Oracle section background globe
+(function(){
   const container = document.querySelector('#s4');
   if(!container) return;
   const oCanvas = document.createElement('canvas');
