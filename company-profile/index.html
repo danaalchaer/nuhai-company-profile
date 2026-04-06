@@ -387,16 +387,13 @@ body{
   #s4 .oracle-flex{flex-direction:column;align-items:center;gap:24px}
   #s4 .oracle-caps{min-width:unset;max-width:100%;width:100%}
   .brains-orbital-wrap{
-    display:flex;justify-content:center;align-items:flex-start;
-    width:100%;height:286px;  /* 440 × 0.65 */
-    overflow:visible;
+    display:flex;justify-content:center;align-items:center;
+    width:100%;height:300px;
   }
   .brains-orbital{
-    transform:scale(0.65);
-    transform-origin:top center;
+    transform:none !important;
     flex-shrink:0;
-    margin:0 auto;display:block;
-    margin-left:auto !important;margin-right:auto !important;
+    margin:0 auto !important;
   }
 
   /* ── Slide 7: process steps stack vertically ── */
@@ -419,8 +416,7 @@ body{
   /* ── Nav: hide on mobile, page scrolls normally ── */
   #prev-btn, #next-btn, #nav-dots { display:none !important; }
   .nav-btn{width:42px;height:42px;font-size:18px}
-  .brain-node{width:72px!important;height:72px!important;font-size:8px!important;padding:5px!important;}
-  .brains-center{width:74px!important;height:74px!important;font-size:8px!important;}
+  /* brain node sizes set by JS for mobile — no override needed */
 
   /* ── FIX 1: Global html/body overflow ── */
   html,body{overflow-x:hidden !important;max-width:100vw;}
@@ -478,8 +474,8 @@ body{
   /* HIDE SIDE DOTS */
   #nav-dots,.nav-dots,[class*="nav-dot"]{display:none !important;}
 
-  /* BRAIN DIAGRAM */
-  #brains-orbital{transform:scale(0.55) !important;transform-origin:top center !important;margin:0 auto !important;display:block !important;}
+  /* BRAIN DIAGRAM — sized natively by JS, no CSS scale */
+  #brains-orbital{transform:none !important;margin:0 auto !important;display:block !important;}
 
   /* COMPARISON TABLE */
   .comp-table-wrap table{display:none !important;}
@@ -505,9 +501,9 @@ body{
 @media(max-width:480px){
   .cover-ring-wrap{width:180px;height:180px}
 
-  /* Extra scale-down for orbital on very small screens */
-  .brains-orbital{transform:scale(0.50);transform-origin:top center;flex-shrink:0;}
-  .brains-orbital-wrap{height:220px;overflow:visible;} /* 440 × 0.50 */
+  /* Very small screens — JS already uses 300px container, just ensure it fits */
+  .brains-orbital{transform:none !important;}
+  .brains-orbital-wrap{height:300px;}
 
   /* Stack exec-summary stat cards 2×2 → 1-col */
   #s2 .grid4{grid-template-columns:repeat(2,1fr) !important}
@@ -1211,7 +1207,26 @@ document.querySelectorAll('.card-3d').forEach(card => {
 const brainNames = ['Creative','Intelligence','Media','Learning',
                     'Performance','Strategy','Growth','Client'];
 const orbital = document.getElementById('brains-orbital');
-const R_ORBIT = 160, CX = 220, CY = 220, NODE_SIZE = 92;
+
+// Responsive orbit sizing — no CSS scale tricks
+const orbitMobile = window.innerWidth <= 768;
+const ORBIT_BOX  = orbitMobile ? 300 : 440;   // container px
+const R_ORBIT    = orbitMobile ? 108 : 160;    // orbit radius
+const CX = ORBIT_BOX / 2, CY = ORBIT_BOX / 2; // center
+const NODE_SIZE  = orbitMobile ? 70 : 92;       // node px
+const CENTER_R   = orbitMobile ? 62 : 90;       // center circle px
+
+// Set container size in CSS
+orbital.style.width  = ORBIT_BOX + 'px';
+orbital.style.height = ORBIT_BOX + 'px';
+
+// Update center circle size
+const centerEl = orbital.querySelector('.brains-center');
+if (centerEl) {
+  centerEl.style.width  = CENTER_R + 'px';
+  centerEl.style.height = CENTER_R + 'px';
+  centerEl.style.fontSize = orbitMobile ? '9px' : '10px';
+}
 
 brainNames.forEach((name, i) => {
   const angle = (i / brainNames.length) * Math.PI * 2 - Math.PI / 2;
@@ -1221,18 +1236,22 @@ brainNames.forEach((name, i) => {
   node.className = 'brain-node';
   node.style.left = x + 'px';
   node.style.top  = y + 'px';
+  node.style.width  = NODE_SIZE + 'px';
+  node.style.height = NODE_SIZE + 'px';
+  node.style.fontSize = orbitMobile ? '9px' : '10.5px';
   node.style.animationDelay = (i * 0.2) + 's';
   node.textContent = name;
   orbital.appendChild(node);
 });
 
-// SVG orbital ring
+// SVG orbital ring — matches container
 const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-svg.style.cssText = 'position:absolute;top:0;left:0;width:440px;height:440px;pointer-events:none';
-svg.setAttribute('viewBox','0 0 440 440');
+svg.style.cssText = `position:absolute;top:0;left:0;width:${ORBIT_BOX}px;height:${ORBIT_BOX}px;pointer-events:none`;
+svg.setAttribute('viewBox',`0 0 ${ORBIT_BOX} ${ORBIT_BOX}`);
 const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-circle.setAttribute('cx','220'); circle.setAttribute('cy','220');
-circle.setAttribute('r','163'); circle.setAttribute('fill','none');
+circle.setAttribute('cx', String(CX)); circle.setAttribute('cy', String(CY));
+circle.setAttribute('r', String(R_ORBIT + NODE_SIZE * 0.15));
+circle.setAttribute('fill','none');
 circle.setAttribute('stroke','rgba(91,222,227,0.18)'); circle.setAttribute('stroke-width','1');
 circle.setAttribute('stroke-dasharray','4 6');
 svg.appendChild(circle);
