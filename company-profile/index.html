@@ -257,7 +257,7 @@ body{
   position:absolute !important;
   top:50% !important;left:50% !important;
   transform:translate(-50%,-50%) !important;
-  width:70px;height:70px;border-radius:50%;background:var(--card);
+  width:70px !important;height:70px !important;border-radius:50%;background:var(--card);
   border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;
   font-size:8px;font-weight:700;color:var(--teal);letter-spacing:.04em;
   text-align:center;line-height:1.4;padding:8px;
@@ -1239,9 +1239,12 @@ if (orbitWrap) {
 const centerEl = orbital.querySelector('.brains-center');
 if (centerEl) {
   const cr = orbitMobile ? 62 : 80;
-  centerEl.style.width  = cr + 'px';
-  centerEl.style.height = cr + 'px';
-  centerEl.style.fontSize = orbitMobile ? '9px' : '10px';
+  centerEl.style.width     = cr + 'px';
+  centerEl.style.height    = cr + 'px';
+  centerEl.style.fontSize  = orbitMobile ? '9px' : '10px';
+  centerEl.style.left      = '50%';
+  centerEl.style.top       = '50%';
+  centerEl.style.transform = 'translate(-50%, -50%)';
 }
 
 brainNames.forEach((name, i) => {
