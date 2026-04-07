@@ -244,7 +244,7 @@ body{
 .comp-table tr:hover td.col-nuhai{background:rgba(91,222,227,.06)}
 /* ── 8-BRAIN ORBITAL ────────────────────────────────────────────── */
 .brains-orbital{
-  position:relative;width:340px;height:340px;flex-shrink:0;
+  position:relative;width:440px;height:440px;flex-shrink:0;
   display:block;margin:0 auto}
 .brains-orbital-wrap{
   width:100% !important;max-width:100% !important;
@@ -1217,12 +1217,37 @@ document.querySelectorAll('.card-3d').forEach(card => {
 const brainNames = ['Creative','Intelligence','Media','Learning',
                     'Performance','Strategy','Growth','Client'];
 const orbital = document.getElementById('brains-orbital');
-const R_ORBIT = 120, CX = 170, CY = 170, NODE_SIZE = 76;
+
+// Responsive constants — desktop 440px box, mobile 300px box
+const orbitMobile  = window.innerWidth <= 768;
+const ORBIT_BOX    = orbitMobile ? 300 : 440;
+const R_ORBIT      = orbitMobile ? 108 : 160;
+const CX = ORBIT_BOX / 2, CY = ORBIT_BOX / 2;
+const NODE_SIZE    = 72; // width of node box (height is 28px via CSS)
+
+// Size the container and its wrap to exactly the box size so flex centering works
+orbital.style.width  = ORBIT_BOX + 'px';
+orbital.style.height = ORBIT_BOX + 'px';
+const orbitWrap = orbital.parentElement;
+if (orbitWrap) {
+  orbitWrap.style.width  = ORBIT_BOX + 'px';
+  orbitWrap.style.maxWidth = ORBIT_BOX + 'px';
+  orbitWrap.style.flexShrink = '0';
+}
+
+// Update center circle size
+const centerEl = orbital.querySelector('.brains-center');
+if (centerEl) {
+  const cr = orbitMobile ? 62 : 80;
+  centerEl.style.width  = cr + 'px';
+  centerEl.style.height = cr + 'px';
+  centerEl.style.fontSize = orbitMobile ? '9px' : '10px';
+}
 
 brainNames.forEach((name, i) => {
   const angle = (i / brainNames.length) * Math.PI * 2 - Math.PI / 2;
   const x = CX + R_ORBIT * Math.cos(angle) - NODE_SIZE / 2;
-  const y = CY + R_ORBIT * Math.sin(angle) - NODE_SIZE / 2;
+  const y = CY + R_ORBIT * Math.sin(angle) - 14; // 14 = half of 28px node height
   const node = document.createElement('div');
   node.className = 'brain-node';
   node.style.left = x + 'px';
@@ -1233,13 +1258,14 @@ brainNames.forEach((name, i) => {
   orbital.appendChild(node);
 });
 
-// SVG orbital ring
+// SVG orbital ring — matches container exactly
 const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-svg.style.cssText = 'position:absolute;top:0;left:0;width:340px;height:340px;pointer-events:none';
-svg.setAttribute('viewBox','0 0 340 340');
+svg.style.cssText = `position:absolute;top:0;left:0;width:${ORBIT_BOX}px;height:${ORBIT_BOX}px;pointer-events:none`;
+svg.setAttribute('viewBox', `0 0 ${ORBIT_BOX} ${ORBIT_BOX}`);
 const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-circle.setAttribute('cx','170'); circle.setAttribute('cy','170');
-circle.setAttribute('r','125'); circle.setAttribute('fill','none');
+circle.setAttribute('cx', String(CX)); circle.setAttribute('cy', String(CY));
+circle.setAttribute('r',  String(R_ORBIT + 20));
+circle.setAttribute('fill','none');
 circle.setAttribute('stroke','rgba(91,222,227,0.18)'); circle.setAttribute('stroke-width','1');
 circle.setAttribute('stroke-dasharray','4 6');
 svg.appendChild(circle);
