@@ -1014,15 +1014,168 @@ torusGlow.visible = true;
 scene.add(torusGlow);
 
 // ── ORACLE Sphere ─────────────────────────────────────────────
-const sphGeo = new THREE.SphereGeometry(117, 28, 28);
-const sphMat = new THREE.MeshBasicMaterial({
-  color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .28 });
-const sphere = new THREE.Mesh(sphGeo, sphMat);
-sphere.position.set(0, 120, 0);
-sphere.visible = false;
-const pointLight = new THREE.PointLight(0x5BDEE3, 1.5, 5);
-scene.add(pointLight);
-scene.add(sphere);
+// ── ORACLE Robotic AI Head ─────────────────────────────────────
+const robotHead = new THREE.Group();
+robotHead.position.set(0, 60, 0);
+robotHead.visible = false;
+
+const sphMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .22 });
+const sphMatGlow = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .10, wireframe: false });
+const lineMat  = new THREE.LineBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .35 });
+const eyeCoreMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .85 });
+const panelMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .18 });
+
+// ── Skull dome (upper cranium)
+const skullGeo = new THREE.SphereGeometry(100, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.6);
+const skull = new THREE.Mesh(skullGeo, sphMat);
+skull.position.set(0, 20, 0);
+robotHead.add(skull);
+
+// Skull glow shell (slightly larger, no wireframe)
+const skullGlowGeo = new THREE.SphereGeometry(103, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.6);
+const skullGlow = new THREE.Mesh(skullGlowGeo, sphMatGlow);
+skullGlow.position.set(0, 20, 0);
+robotHead.add(skullGlow);
+
+// ── Face plate (flattened box)
+const faceGeo = new THREE.BoxGeometry(148, 120, 28, 6, 8, 2);
+const faceMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .15 });
+const face = new THREE.Mesh(faceGeo, faceMat);
+face.position.set(0, -40, 0);
+robotHead.add(face);
+
+// ── Forehead ridge (thin box above eyes)
+const ridgeGeo = new THREE.BoxGeometry(150, 14, 36, 8, 1, 1);
+const ridge = new THREE.Mesh(ridgeGeo, panelMat);
+ridge.position.set(0, 22, 12);
+robotHead.add(ridge);
+
+// ── Eye sockets — LEFT
+const eyeSocketGeo = new THREE.CylinderGeometry(22, 20, 14, 20, 1, true);
+const eyeSocketMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .30, side: THREE.DoubleSide });
+const leftSocket = new THREE.Mesh(eyeSocketGeo, eyeSocketMat);
+leftSocket.rotation.x = Math.PI / 2;
+leftSocket.position.set(-42, -10, 18);
+robotHead.add(leftSocket);
+
+// ── Eye sockets — RIGHT
+const rightSocket = leftSocket.clone();
+rightSocket.position.set(42, -10, 18);
+robotHead.add(rightSocket);
+
+// ── Eye glow cores (bright discs)
+const eyeCoreGeo = new THREE.CircleGeometry(13, 32);
+const leftCore = new THREE.Mesh(eyeCoreGeo, eyeCoreMat);
+leftCore.position.set(-42, -10, 26);
+robotHead.add(leftCore);
+
+const rightCore = new THREE.Mesh(eyeCoreGeo, eyeCoreMat.clone());
+rightCore.position.set(42, -10, 26);
+robotHead.add(rightCore);
+
+// ── Eye inner rings (concentric glow rings)
+[-42, 42].forEach(x => {
+  [18, 11, 6].forEach((r, ri) => {
+    const ringGeo = new THREE.RingGeometry(r - 1.5, r, 32);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: 0.6 - ri * 0.15, side: THREE.DoubleSide });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.position.set(x, -10, 25 + ri * 0.5);
+    robotHead.add(ring);
+  });
+});
+
+// ── Nose bridge (vertical strip)
+const noseGeo = new THREE.BoxGeometry(10, 28, 18, 1, 3, 1);
+const nose = new THREE.Mesh(noseGeo, panelMat);
+nose.position.set(0, -50, 16);
+robotHead.add(nose);
+
+// ── Jaw panel (lower face)
+const jawGeo = new THREE.BoxGeometry(130, 36, 22, 6, 2, 1);
+const jaw = new THREE.Mesh(jawGeo, faceMat);
+jaw.position.set(0, -88, 4);
+robotHead.add(jaw);
+
+// ── Mouth slot (thin horizontal bar)
+const mouthGeo = new THREE.BoxGeometry(80, 8, 26, 10, 1, 1);
+const mouthMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .40 });
+const mouth = new THREE.Mesh(mouthGeo, mouthMat);
+mouth.position.set(0, -80, 14);
+robotHead.add(mouth);
+
+// ── Ear panels — LEFT
+const earGeo = new THREE.BoxGeometry(18, 70, 32, 2, 4, 2);
+const leftEar = new THREE.Mesh(earGeo, panelMat);
+leftEar.position.set(-84, -20, -2);
+leftEar.rotation.y = -0.15;
+robotHead.add(leftEar);
+
+// ── Ear panels — RIGHT
+const rightEar = leftEar.clone();
+rightEar.position.set(84, -20, -2);
+rightEar.rotation.y = 0.15;
+robotHead.add(rightEar);
+
+// ── Neck column
+const neckGeo = new THREE.CylinderGeometry(32, 40, 40, 12, 3, true);
+const neckMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .18 });
+const neck = new THREE.Mesh(neckGeo, neckMat);
+neck.position.set(0, -118, -4);
+robotHead.add(neck);
+
+// ── Neural circuit lines radiating from skull
+(function buildNeuralLines() {
+  const points3D = [
+    [0, 120, 0],   [-60, 100, 60],  [60, 100, 60],
+    [-90, 60, 40], [90, 60, 40],    [0, 80, -90],
+    [-70, 20, -70],[70, 20, -70],   [-100, 40, 10],
+    [100, 40, 10], [0, 130, -30],   [-40, 110, -60],
+    [40, 110, -60],[0, 0, -100]
+  ];
+  // Connect each point to 2 random neighbours
+  for (let i = 0; i < points3D.length; i++) {
+    for (let j = i + 1; j < points3D.length; j++) {
+      if (Math.random() > 0.55) continue;
+      const pts = [
+        new THREE.Vector3(...points3D[i]),
+        new THREE.Vector3(...points3D[j])
+      ];
+      const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
+      robotHead.add(new THREE.Line(lineGeo, lineMat));
+    }
+  }
+
+  // Small glowing nodes at each vertex
+  const nodeMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .7 });
+  const nodeGeo = new THREE.SphereGeometry(3.5, 8, 8);
+  points3D.forEach(p => {
+    const node = new THREE.Mesh(nodeGeo, nodeMat);
+    node.position.set(...p);
+    robotHead.add(node);
+  });
+})();
+
+// ── Floating data ring around the head
+const dataRingGeo = new THREE.TorusGeometry(138, 2.5, 8, 80);
+const dataRingMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .22 });
+const dataRing = new THREE.Mesh(dataRingGeo, dataRingMat);
+dataRing.rotation.x = Math.PI / 2;
+dataRing.position.set(0, -10, 0);
+robotHead.add(dataRing);
+
+// Second tilted ring
+const dataRing2 = new THREE.Mesh(
+  new THREE.TorusGeometry(122, 1.5, 8, 60),
+  new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .15 })
+);
+dataRing2.rotation.set(0.4, 0.2, 0);
+dataRing2.position.set(0, 10, 0);
+robotHead.add(dataRing2);
+
+scene.add(robotHead);
+
+// alias so existing visibility/fade code still works
+const sphere = robotHead;
 
 // ── Animate ───────────────────────────────────────────────────
 const rotationSpeed = isMobile ? 0.001 : 0.002;
@@ -1053,8 +1206,17 @@ function animate() {
     torusGlow.rotation.y = -t * (0.27 * rotationSpeed / 0.002);
   }
   if (sphere.visible) {
-    sphere.rotation.x = t * (0.07 * rotationSpeed / 0.002);
-    sphere.rotation.y = t * (0.1 * rotationSpeed / 0.002);
+    // Gentle slow yaw and subtle nodding
+    sphere.rotation.y = t * (0.18 * rotationSpeed / 0.002);
+    sphere.rotation.x = Math.sin(t * 0.3) * 0.06;
+    // Data rings spin at different speeds
+    if (dataRing)  dataRing.rotation.z  = t * 0.4;
+    if (dataRing2) dataRing2.rotation.z = -t * 0.25;
+    // Eye pulse (opacity flicker)
+    const pulse = 0.75 + Math.sin(t * 2.2) * 0.25;
+    leftCore.material.opacity  = pulse;
+    rightCore.material.opacity = pulse;
+  }
   }
   renderer.render(scene, camera);
 }
