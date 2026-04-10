@@ -1013,17 +1013,33 @@ const torusGlow = new THREE.Mesh(
 torusGlow.visible = true;
 scene.add(torusGlow);
 
-// ── ORACLE Sphere ─────────────────────────────────────────────
-// ── ORACLE Robotic AI Head ─────────────────────────────────────
+// ── ORACLE Simple Robotic Head ─────────────────────────────────────
 const robotHead = new THREE.Group();
 robotHead.position.set(0, 60, 0);
 robotHead.visible = false;
 
-const sphMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .22 });
-const sphMatGlow = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .10, wireframe: false });
-const lineMat  = new THREE.LineBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .35 });
-const eyeCoreMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: .85 });
-const panelMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: .18 });
+// Simple skull
+const skullGeo = new THREE.SphereGeometry(80, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.7);
+const skullMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, wireframe: true, transparent: true, opacity: 0.3 });
+const skull = new THREE.Mesh(skullGeo, skullMat);
+skull.position.set(0, 20, 0);
+robotHead.add(skull);
+
+// Simple eyes
+const eyeGeo = new THREE.CircleGeometry(8, 16);
+const eyeMat = new THREE.MeshBasicMaterial({ color: 0x5BDEE3, transparent: true, opacity: 0.8 });
+const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+leftEye.position.set(-25, 0, 40);
+robotHead.add(leftEye);
+
+const rightEye = leftEye.clone();
+rightEye.position.set(25, 0, 40);
+robotHead.add(rightEye);
+
+const pointLight = new THREE.PointLight(0x5BDEE3, 1.5, 5);
+scene.add(pointLight);
+scene.add(robotHead);
+const sphere = robotHead; // alias for existing code;
 
 // ── Skull dome (upper cranium)
 const skullGeo = new THREE.SphereGeometry(100, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.6);
