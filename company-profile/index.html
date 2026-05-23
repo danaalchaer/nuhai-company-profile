@@ -567,12 +567,14 @@ canvas{will-change:auto;}
   section{will-change:auto;transform:translateZ(0);}
   *{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
 
-  /* ── Mobile canvas: push behind content ── */
-  #bg-canvas{position:fixed !important;z-index:-1 !important;}
+  /* ── Mobile canvas: keep above body bg so ring/particles are visible ── */
+  #bg-canvas{position:fixed !important;z-index:0 !important;}
 
   /* ── ORACLE section: ensure content sits above 3D bg ── */
   #s4{position:relative;}
   #s4 > *{position:relative;z-index:2;}
+  /* All other slides: sit above canvas ── */
+  .slide > *{position:relative;z-index:2;}
 
   /* ── Text readability over 3D background ── */
   #s4 .s-h1,#s4 .s-h2,#s4 p,#s4 li{
